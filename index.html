@@ -33,383 +33,412 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="min-h-screen antialiased">
 
-    <!-- Top Premium Navigation Bar -->
-    <header class="border-b border-slate-800 bg-[#0F141C] sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap justify-between items-center gap-4 md:gap-6">
-        <div class="flex items-center space-x-3">
-            <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
-                <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <!-- ========================================== -->
+    <!-- AUTHENTICATION SCREEN (VISIBLE BY DEFAULT) -->
+    <!-- ========================================== -->
+    <div id="auth-screen" class="min-h-screen flex items-center justify-center bg-[#0B0F13] p-4 relative overflow-hidden">
+        <!-- Ambient background glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="bg-[#0F141C] border border-slate-800 rounded-2xl w-full max-w-md p-8 space-y-6 shadow-2xl relative z-10">
+            <div class="text-center space-y-2 mb-8">
+                <div class="bg-emerald-500/10 w-12 h-12 rounded-xl border border-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white tracking-tight">NGX Pulse Wealth</h1>
+                <p id="auth-title" class="text-sm text-slate-400">Sign in to access your ledger</p>
             </div>
-            <div>
-                <h1 class="text-xl font-bold text-white tracking-tight">NGX Pulse Wealth Suite</h1>
-                <p class="text-xs text-slate-400">Unified Portfolio, Liabilities & Capital Ledger</p>
-            </div>
-        </div>
 
-        <!-- Multi-Page Tab System Controls -->
-        <nav class="flex bg-[#0B0F13] p-1.5 rounded-xl border border-slate-800 space-x-1">
-            <button onclick="switchTab('portfolio')" id="tab-portfolio" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                Portfolio Engine
-            </button>
-            <button onclick="switchTab('loans')" id="tab-loans" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l2-2 4 4m0-7l3 3m0 0l-3 3m3-3H8m2 6h.01M17 16h.01M13 16h.01M17 12h.01M13 12h.01M9 12h.01M17 8h.01M13 8h.01M9 8h.01M13 4h.01M9 4h.01M5 4h.01M5 8h.01M5 12h.01M5 16h.01"></path></svg>
-                Liabilities & Loans
-            </button>
-            <button onclick="switchTab('budgeting')" id="tab-budgeting" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                Capital Budgeting
-            </button>
-        </nav>
-
-        <!-- Dynamic Exchange Rates Status & Auth -->
-        <div class="flex items-center space-x-4">
+            <p id="auth-error" class="text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 p-3 rounded-lg hidden text-center"></p>
             
-            <!-- Auth Container -->
-            <div id="auth-status-container" class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-xs">
-                <span id="user-email-display" class="text-slate-300 font-medium truncate max-w-[120px]">Guest Mode</span>
-                <button id="auth-action-btn" onclick="openModal('auth-modal')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded transition">Log In</button>
-            </div>
-
-            <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden lg:flex">
-                <span id="usd-rate-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-slate-400 font-medium">USD/NGN Official Rate:</span>
-                <span class="text-white font-bold">₦</span>
-                <input type="number" id="usd-rate-input" step="0.01" min="0" class="bg-transparent text-white font-bold w-24 focus:outline-none border-b border-dashed border-slate-700 focus:border-emerald-500 transition" placeholder="Fetching..." onchange="updateUsdRateManually(this.value)">
-                <button onclick="resetUsdRateToLive()" class="text-slate-500 hover:text-white transition">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
-                </button>
-            </div>
-            <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden md:flex">
-                <span class="text-slate-400 font-medium">NGX Pulse Feed:</span>
-                <span id="stock-sync-badge" class="text-white font-bold">Not synced yet</span>
-            </div>
-            <button onclick="refreshAllData()" class="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-2 rounded-lg text-xs transition border border-slate-700 flex items-center gap-1.5 shadow-sm">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
-                <span class="hidden sm:inline">Sync Market Data</span>
-            </button>
-        </div>
-    </header>
-
-    <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 max-w-7xl w-full mx-auto space-y-10">
-
-        <!-- ========================================== -->
-        <!-- VIEW 1: RE-ENGINEERED PORTFOLIO LEDGER -->
-        <!-- ========================================== -->
-        <div id="view-portfolio" class="space-y-6">
-            
-            <!-- DUAL AMBIENT COOL/WARM GRADIENT SCREEN TICKER -->
-            <div class="p-[1.5px] rounded-xl bg-gradient-to-r from-cyan-400 via-blue-600 via-purple-600 to-amber-500 shadow-[0_0_25px_rgba(59,130,246,0.15)] shadow-[0_0_25px_rgba(245,158,11,0.15)]">
-                <div id="ticker-tape-container" class="bg-[#0F141C]/95 backdrop-blur-md rounded-xl p-2.5 overflow-hidden min-h-[46px]">
-                </div>
-            </div>
-            
-            <!-- Macro Summary Financial KPI Blocks -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Portfolio Value</p>
-                    <p id="kpi-total-value" class="text-2xl font-bold text-white">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Capital Outlay</p>
-                    <p id="kpi-total-cost" class="text-2xl font-bold text-slate-300">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Absolute Return Gain/Loss</p>
-                    <p id="kpi-total-gain" class="text-2xl font-bold text-emerald-400">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Overall Return on Investment</p>
-                    <p id="kpi-total-roi" class="text-2xl font-bold text-emerald-400">0.00%</p>
-                </div>
-            </div>
-
-            <!-- Visualization Dashboard Layer -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-1 flex flex-col justify-between shadow-xl min-h-[340px]">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Allocation By Asset Class
-                    </h3>
-                    <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
-                        <canvas id="assetAllocationChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-2 shadow-xl flex flex-col justify-between">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Real-time Performance Metrics By Class
-                    </h3>
-                    <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
-                        <canvas id="assetPerformanceChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ASSET CLASS 1: STOCKS LEDGER -->
-            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-base font-bold text-white tracking-wide">1. Equities Portfolio (Stocks)</h2>
-                        <p class="text-xs text-slate-400">Calculated via Average Cost per Broker matrix. Live feed synced from NGX Pulse.</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="openBrokerModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-slate-700 shadow-sm flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 100-8 4 4 0 000 8zm6 3a4 4 0 00-3-3.87M9 12a4 4 0 100-8 4 4 0 000 8z"></path></svg> Manage Brokers
-                        </button>
-                        <button onclick="openStockModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Equities Position
-                        </button>
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead id="stocks-table-head" class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800"></thead>
-                        <tbody id="stocks-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ASSET CLASS 2: MUTUAL FUNDS & SAVINGS LEDGER -->
-            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-base font-bold text-white tracking-wide">2. Mutual Funds & Yield Savings</h2>
-                        <p class="text-xs text-slate-400">Computed via Outlay Cost + Interest Accrued mechanics.</p>
-                    </div>
-                    <button onclick="openFundModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Income Fund
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
-                                <th class="px-6 py-3">Fund / Savings Provider Name</th>
-                                <th class="px-6 py-3 text-right">Base Capital Cost</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">Interest Earned</th>
-                                <th class="px-6 py-3 text-right font-medium text-slate-300">Current Market Value</th>
-                                <th class="px-6 py-3 text-right font-medium text-slate-300">Absolute ROI %</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
-                                <th class="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="funds-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ASSET CLASS 3: PENSION ASSETS LEDGER -->
-            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-base font-bold text-white tracking-wide">3. Pension Accounts (PFA Asset Class)</h2>
-                        <p class="text-xs text-slate-400">Valued using Base Historical Cost + Accumulated Compounded Growth.</p>
-                    </div>
-                    <button onclick="openPensionModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Link Pension Account
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
-                                <th class="px-6 py-3">Pension Fund Administrator (PFA)</th>
-                                <th class="px-6 py-3 text-right">Base Contributions Cost</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">Accumulated Growth</th>
-                                <th class="px-6 py-3 text-right font-medium text-slate-300">Current Liquidity Value</th>
-                                <th class="px-6 py-3 text-right font-medium text-slate-300">Total Gain %</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
-                                <th class="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pension-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ASSET CLASS 4: USD DENOMINATED ASSETS LEDGER -->
-            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-base font-bold text-white tracking-wide">4. USD Denominated Assets</h2>
-                        <p class="text-xs text-slate-400">Values tracked in USD and multiplied in real-time by the official central exchange rate into NGN.</p>
-                    </div>
-                    <button onclick="openUsdModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Foreign Asset
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
-                                <th class="px-6 py-3">Asset Designation</th>
-                                <th class="px-6 py-3 text-right">Principal (USD)</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">Interest (USD)</th>
-                                <th class="px-6 py-3 text-right text-slate-300">Value (USD)</th>
-                                <th class="px-6 py-3 text-right font-bold text-emerald-400">Value (NGN Equivalent)</th>
-                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
-                                <th class="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usd-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW 2: LOANS & LIABILITIES -->
-        <div id="view-loans" class="space-y-6 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Principal Borrowed</p>
-                    <p id="kpi-loan-principal" class="text-2xl font-bold text-white">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Accrued Reducing Interest</p>
-                    <p id="kpi-loan-interest" class="text-2xl font-bold text-rose-400">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Outstanding Liabilities</p>
-                    <p id="kpi-loan-outstanding" class="text-2xl font-bold text-rose-500">₦0.00</p>
-                </div>
-            </div>
-
-            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
-                    <div>
-                        <h2 class="text-base font-bold text-white tracking-wide">Liabilities & Outstanding Loans Ledger</h2>
-                        <p class="text-xs text-slate-400">Calculated strictly on a <b>Daily Reducing Balance model</b>. Repayments support multiple batches/tranches.</p>
-                    </div>
-                    <button onclick="openModal('loan-modal')" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-rose-500 shadow-sm flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Log Active Debt Facility
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
-                                <th class="px-4 py-3">Debt Facility Provider</th>
-                                <th class="px-4 py-3 text-right">Principal Borrowed</th>
-                                <th class="px-4 py-3 text-center">Origination Date</th>
-                                <th class="px-4 py-3 text-right">Annual Rate</th>
-                                <th class="px-4 py-3 text-right text-rose-400">Accrued Int. (Daily)</th>
-                                <th class="px-4 py-3 text-right text-emerald-400">Total Repaid</th>
-                                <th class="px-4 py-3 text-right font-bold text-rose-500">Current Balance</th>
-                                <th class="px-4 py-3"><span class="block px-2">Batch Repayment History</span></th>
-                                <th class="px-4 py-3 text-center">Action Options</th>
-                            </tr>
-                        </thead>
-                        <tbody id="loans-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW 3: BUDGETING -->
-        <div id="view-budgeting" class="space-y-6 hidden">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Household Income</p>
-                    <p id="kpi-budget-income" class="text-2xl font-bold text-emerald-400">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Allocated Budget Cap</p>
-                    <p id="kpi-budget-allocated" class="text-2xl font-bold text-white">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Actual Logged Expenditures</p>
-                    <p id="kpi-budget-actual" class="text-2xl font-bold text-blue-400">₦0.00</p>
-                </div>
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Free Cash Runway</p>
-                    <p id="kpi-budget-variance" class="text-2xl font-bold text-emerald-400">₦0.00</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl space-y-5 h-fit">
-                    <div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-slate-800 pb-2 mb-3">Household Income Sources</h3>
-                        <p class="text-xs text-slate-500 mb-3 leading-relaxed">This is a household budget — add every income source it draws on.</p>
-                        <div id="income-list" class="space-y-2 mb-4"></div>
-                        <div class="space-y-3 border-t border-slate-800/60 pt-4">
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Income Source Name</label>
-                                <input type="text" id="new-income-name" placeholder="e.g. Primary Salary" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Monthly Amount (₦)</label>
-                                <input type="number" id="new-income-amount" min="0" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){addIncomeSource();}">
-                            </div>
-                            <button onclick="addIncomeSource()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Add Income Source</button>
-                        </div>
-                    </div>
-                    <div class="border-t border-slate-800/60 pt-4">
-                        <h4 class="text-xs font-bold text-slate-300 uppercase mb-2">Create Envelope Category</h4>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Category Label Name</label>
-                                <input type="text" id="new-budget-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Monthly Cost Ceiling Cap (₦)</label>
-                                <input type="number" id="new-budget-cap" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
-                            </div>
-                            <button onclick="addBudgetCategory()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Provision Budget Category</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl lg:col-span-2">
-                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800">
-                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Dynamic Budget Allocation Envelopes</h2>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
-                                    <th class="px-6 py-3">Spending Category Envelope</th>
-                                    <th class="px-6 py-3 text-right">Allocated Cap Cost</th>
-                                    <th class="px-6 py-3 text-right">Actual Outflows</th>
-                                    <th class="px-6 py-3 text-right">Variance Delta</th>
-                                    <th class="px-6 py-3 text-center">Status Health</th>
-                                    <th class="px-6 py-3 text-center">Actions / Modification</th>
-                                </tr>
-                            </thead>
-                            <tbody id="budget-table-body" class="divide-y divide-slate-800/60"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- AUTHENTICATION MODAL -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 id="auth-title" class="font-bold text-white text-base">Account Sign In</h3>
-                <button onclick="closeModal('auth-modal')" class="text-slate-400 hover:text-white">&times;</button>
-            </div>
-            <p id="auth-error" class="text-xs text-rose-400 hidden"></p>
-            <div class="space-y-3">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Email Address</label>
-                    <input type="email" id="auth-email" placeholder="name@example.com" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5">Email Address</label>
+                    <input type="email" id="auth-email" placeholder="name@example.com" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Password</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){handleAuthSubmit();}">
                 </div>
             </div>
-            <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Sign In</button>
-            <div class="text-center">
+            
+            <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-3 rounded-xl border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)] transition mt-2">Sign In</button>
+            
+            <div class="text-center pt-2 border-t border-slate-800/60 mt-6">
                 <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs text-slate-400 hover:text-emerald-400 transition">Don't have an account? Sign Up</button>
             </div>
         </div>
     </div>
 
-    <!-- INTERACTIVE MODAL OVERLAYS -->
+
+    <!-- ========================================== -->
+    <!-- MAIN DASHBOARD APP (HIDDEN BY DEFAULT) -->
+    <!-- ========================================== -->
+    <div id="app-dashboard" class="hidden min-h-screen flex-col">
+        <!-- Top Premium Navigation Bar -->
+        <header class="border-b border-slate-800 bg-[#0F141C] sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap justify-between items-center gap-4 md:gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-tight">NGX Pulse Wealth Suite</h1>
+                    <p class="text-xs text-slate-400">Unified Portfolio, Liabilities & Capital Ledger</p>
+                </div>
+            </div>
+
+            <!-- Multi-Page Tab System Controls -->
+            <nav class="flex bg-[#0B0F13] p-1.5 rounded-xl border border-slate-800 space-x-1">
+                <button onclick="switchTab('portfolio')" id="tab-portfolio" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    Portfolio Engine
+                </button>
+                <button onclick="switchTab('loans')" id="tab-loans" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l2-2 4 4m0-7l3 3m0 0l-3 3m3-3H8m2 6h.01M17 16h.01M13 16h.01M17 12h.01M13 12h.01M9 12h.01M17 8h.01M13 8h.01M9 8h.01M13 4h.01M9 4h.01M5 4h.01M5 8h.01M5 12h.01M5 16h.01"></path></svg>
+                    Liabilities & Loans
+                </button>
+                <button onclick="switchTab('budgeting')" id="tab-budgeting" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    Capital Budgeting
+                </button>
+            </nav>
+
+            <!-- Dynamic Exchange Rates Status & Auth -->
+            <div class="flex items-center space-x-4">
+                
+                <!-- Authenticated User Profile -->
+                <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-xs">
+                    <div class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px]">
+                        U
+                    </div>
+                    <span id="user-email-display" class="text-slate-300 font-medium truncate max-w-[120px]">user@email.com</span>
+                    <button onclick="handleSignOut()" class="bg-rose-600/10 hover:bg-rose-600/30 text-rose-400 font-bold px-2.5 py-1 rounded border border-rose-500/20 transition ml-2">Sign Out</button>
+                </div>
+
+                <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden lg:flex">
+                    <span id="usd-rate-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-slate-400 font-medium">USD/NGN Official Rate:</span>
+                    <span class="text-white font-bold">₦</span>
+                    <input type="number" id="usd-rate-input" step="0.01" min="0" class="bg-transparent text-white font-bold w-24 focus:outline-none border-b border-dashed border-slate-700 focus:border-emerald-500 transition" placeholder="Fetching..." onchange="updateUsdRateManually(this.value)">
+                    <button onclick="resetUsdRateToLive()" class="text-slate-500 hover:text-white transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
+                    </button>
+                </div>
+                <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden md:flex">
+                    <span class="text-slate-400 font-medium">NGX Pulse Feed:</span>
+                    <span id="stock-sync-badge" class="text-white font-bold">Not synced yet</span>
+                </div>
+                <button onclick="refreshAllData()" class="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-2 rounded-lg text-xs transition border border-slate-700 flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
+                    <span class="hidden sm:inline">Sync Market Data</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 max-w-7xl w-full mx-auto space-y-10">
+
+            <!-- ========================================== -->
+            <!-- VIEW 1: RE-ENGINEERED PORTFOLIO LEDGER -->
+            <!-- ========================================== -->
+            <div id="view-portfolio" class="space-y-6">
+                
+                <!-- DUAL AMBIENT COOL/WARM GRADIENT SCREEN TICKER -->
+                <div class="p-[1.5px] rounded-xl bg-gradient-to-r from-cyan-400 via-blue-600 via-purple-600 to-amber-500 shadow-[0_0_25px_rgba(59,130,246,0.15)] shadow-[0_0_25px_rgba(245,158,11,0.15)]">
+                    <div id="ticker-tape-container" class="bg-[#0F141C]/95 backdrop-blur-md rounded-xl p-2.5 overflow-hidden min-h-[46px]">
+                    </div>
+                </div>
+                
+                <!-- Macro Summary Financial KPI Blocks -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Portfolio Value</p>
+                        <p id="kpi-total-value" class="text-2xl font-bold text-white">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Capital Outlay</p>
+                        <p id="kpi-total-cost" class="text-2xl font-bold text-slate-300">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Absolute Return Gain/Loss</p>
+                        <p id="kpi-total-gain" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Overall Return on Investment</p>
+                        <p id="kpi-total-roi" class="text-2xl font-bold text-emerald-400">0.00%</p>
+                    </div>
+                </div>
+
+                <!-- Visualization Dashboard Layer -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-1 flex flex-col justify-between shadow-xl min-h-[340px]">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span> Allocation By Asset Class
+                        </h3>
+                        <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
+                            <canvas id="assetAllocationChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-2 shadow-xl flex flex-col justify-between">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Real-time Performance Metrics By Class
+                        </h3>
+                        <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
+                            <canvas id="assetPerformanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ASSET CLASS 1: STOCKS LEDGER -->
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide">1. Equities Portfolio (Stocks)</h2>
+                            <p class="text-xs text-slate-400">Calculated via Average Cost per Broker matrix. Live feed synced from NGX Pulse.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openBrokerModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-slate-700 shadow-sm flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 100-8 4 4 0 000 8zm6 3a4 4 0 00-3-3.87M9 12a4 4 0 100-8 4 4 0 000 8z"></path></svg> Manage Brokers
+                            </button>
+                            <button onclick="openStockModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Equities Position
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead id="stocks-table-head" class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800"></thead>
+                            <tbody id="stocks-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ASSET CLASS 2: MUTUAL FUNDS & SAVINGS LEDGER -->
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide">2. Mutual Funds & Yield Savings</h2>
+                            <p class="text-xs text-slate-400">Computed via Outlay Cost + Interest Accrued mechanics.</p>
+                        </div>
+                        <button onclick="openFundModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Income Fund
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                    <th class="px-6 py-3">Fund / Savings Provider Name</th>
+                                    <th class="px-6 py-3 text-right">Base Capital Cost</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">Interest Earned</th>
+                                    <th class="px-6 py-3 text-right font-medium text-slate-300">Current Market Value</th>
+                                    <th class="px-6 py-3 text-right font-medium text-slate-300">Absolute ROI %</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                    <th class="px-6 py-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="funds-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ASSET CLASS 3: PENSION ASSETS LEDGER -->
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide">3. Pension Accounts (PFA Asset Class)</h2>
+                            <p class="text-xs text-slate-400">Valued using Base Historical Cost + Accumulated Compounded Growth.</p>
+                        </div>
+                        <button onclick="openPensionModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Link Pension Account
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                    <th class="px-6 py-3">Pension Fund Administrator (PFA)</th>
+                                    <th class="px-6 py-3 text-right">Base Contributions Cost</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">Accumulated Growth</th>
+                                    <th class="px-6 py-3 text-right font-medium text-slate-300">Current Liquidity Value</th>
+                                    <th class="px-6 py-3 text-right font-medium text-slate-300">Total Gain %</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                    <th class="px-6 py-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pension-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ASSET CLASS 4: USD DENOMINATED ASSETS LEDGER -->
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide">4. USD Denominated Assets</h2>
+                            <p class="text-xs text-slate-400">Values tracked in USD and multiplied in real-time by the official central exchange rate into NGN.</p>
+                        </div>
+                        <button onclick="openUsdModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Foreign Asset
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                    <th class="px-6 py-3">Asset Designation</th>
+                                    <th class="px-6 py-3 text-right">Principal (USD)</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">Interest (USD)</th>
+                                    <th class="px-6 py-3 text-right text-slate-300">Value (USD)</th>
+                                    <th class="px-6 py-3 text-right font-bold text-emerald-400">Value (NGN Equivalent)</th>
+                                    <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                    <th class="px-6 py-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usd-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: LOANS & LIABILITIES -->
+            <div id="view-loans" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Principal Borrowed</p>
+                        <p id="kpi-loan-principal" class="text-2xl font-bold text-white">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Accrued Reducing Interest</p>
+                        <p id="kpi-loan-interest" class="text-2xl font-bold text-rose-400">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Outstanding Liabilities</p>
+                        <p id="kpi-loan-outstanding" class="text-2xl font-bold text-rose-500">₦0.00</p>
+                    </div>
+                </div>
+
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide">Liabilities & Outstanding Loans Ledger</h2>
+                            <p class="text-xs text-slate-400">Calculated strictly on a <b>Daily Reducing Balance model</b>. Repayments support multiple batches/tranches.</p>
+                        </div>
+                        <button onclick="openModal('loan-modal')" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-rose-500 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Log Active Debt Facility
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                    <th class="px-4 py-3">Debt Facility Provider</th>
+                                    <th class="px-4 py-3 text-right">Principal Borrowed</th>
+                                    <th class="px-4 py-3 text-center">Origination Date</th>
+                                    <th class="px-4 py-3 text-right">Annual Rate</th>
+                                    <th class="px-4 py-3 text-right text-rose-400">Accrued Int. (Daily)</th>
+                                    <th class="px-4 py-3 text-right text-emerald-400">Total Repaid</th>
+                                    <th class="px-4 py-3 text-right font-bold text-rose-500">Current Balance</th>
+                                    <th class="px-4 py-3"><span class="block px-2">Batch Repayment History</span></th>
+                                    <th class="px-4 py-3 text-center">Action Options</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loans-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: BUDGETING -->
+            <div id="view-budgeting" class="space-y-6 hidden">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Household Income</p>
+                        <p id="kpi-budget-income" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Allocated Budget Cap</p>
+                        <p id="kpi-budget-allocated" class="text-2xl font-bold text-white">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Actual Logged Expenditures</p>
+                        <p id="kpi-budget-actual" class="text-2xl font-bold text-blue-400">₦0.00</p>
+                    </div>
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Free Cash Runway</p>
+                        <p id="kpi-budget-variance" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl space-y-5 h-fit">
+                        <div>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-slate-800 pb-2 mb-3">Household Income Sources</h3>
+                            <p class="text-xs text-slate-500 mb-3 leading-relaxed">This is a household budget — add every income source it draws on.</p>
+                            <div id="income-list" class="space-y-2 mb-4"></div>
+                            <div class="space-y-3 border-t border-slate-800/60 pt-4">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Income Source Name</label>
+                                    <input type="text" id="new-income-name" placeholder="e.g. Primary Salary" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Monthly Amount (₦)</label>
+                                    <input type="number" id="new-income-amount" min="0" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){addIncomeSource();}">
+                                </div>
+                                <button onclick="addIncomeSource()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Add Income Source</button>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-800/60 pt-4">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase mb-2">Create Envelope Category</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Category Label Name</label>
+                                    <input type="text" id="new-budget-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400 mb-1">Monthly Cost Ceiling Cap (₦)</label>
+                                    <input type="number" id="new-budget-cap" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                                </div>
+                                <button onclick="addBudgetCategory()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Provision Budget Category</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl lg:col-span-2">
+                        <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800">
+                            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Dynamic Budget Allocation Envelopes</h2>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                        <th class="px-6 py-3">Spending Category Envelope</th>
+                                        <th class="px-6 py-3 text-right">Allocated Cap Cost</th>
+                                        <th class="px-6 py-3 text-right">Actual Outflows</th>
+                                        <th class="px-6 py-3 text-right">Variance Delta</th>
+                                        <th class="px-6 py-3 text-center">Status Health</th>
+                                        <th class="px-6 py-3 text-center">Actions / Modification</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="budget-table-body" class="divide-y divide-slate-800/60"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="border-t border-slate-800 bg-[#0F141C] text-center py-4 px-6 text-xs text-slate-500 mt-auto">
+            NGX Pulse Core Engine System • Connected to secure cloud ledger.
+        </footer>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- INTERACTIVE MODAL OVERLAYS (DASHBOARD ONLY)-->
+    <!-- ========================================== -->
+    
     <div id="stock-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
@@ -431,7 +460,6 @@
         </div>
     </div>
 
-    <!-- OTHER POSITION MODALS -->
     <div id="broker-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
@@ -523,7 +551,6 @@
         </div>
     </div>
 
-    <!-- REPAYMENT BATCH MODAL -->
     <div id="repayment-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
@@ -573,7 +600,6 @@
         </div>
     </div>
 
-    <!-- BUDGET LOG EXPENSE MODAL -->
     <div id="expense-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
@@ -591,7 +617,6 @@
         </div>
     </div>
 
-    <!-- EDIT BUDGET CATEGORY ENVELOPE MODAL -->
     <div id="budget-category-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
@@ -617,11 +642,9 @@
         </div>
     </div>
 
-    <footer class="border-t border-slate-800 bg-[#0F141C] text-center py-4 px-6 text-xs text-slate-500 mt-auto">
-        NGX Pulse Core Engine System • All Ledger Math processing localized.
-    </footer>
-
+    <!-- ========================================== -->
     <!-- SYSTEMS CONTROLLER / ARCHITECTURE ENGINES  -->
+    <!-- ========================================== -->
     <script>
         // 1. SUPABASE CONFIGURATION
         const SUPABASE_URL = 'https://smcnvmylvgwuiohqaiaw.supabase.co';
@@ -656,26 +679,43 @@
         let performanceChartInstance = null;
         let lastRenderedTickersStr = '';
 
-        // 2. INITIALIZATION & AUTH STATE MONITORING
+        // 2. INITIALIZATION & ROUTING VIA AUTH STATE
         window.addEventListener('DOMContentLoaded', async () => {
             supabase.auth.onAuthStateChange(async (event, session) => {
+                const authScreen = document.getElementById('auth-screen');
+                const appDashboard = document.getElementById('app-dashboard');
+                const errorEl = document.getElementById('auth-error');
+                
+                errorEl.classList.add('hidden'); // Clear errors on state change
+
                 if (session?.user) {
+                    // --- USER IS LOGGED IN ---
                     currentUser = session.user;
-                    updateAuthUI(currentUser.email);
+                    
+                    // Switch UI
+                    authScreen.classList.add('hidden');
+                    authScreen.classList.remove('flex');
+                    appDashboard.classList.remove('hidden');
+                    appDashboard.classList.add('flex'); // Keep the flex-col layout
+                    
+                    // Update header UI
+                    document.getElementById('user-email-display').innerText = currentUser.email;
+
+                    // Load user's data from cloud
                     await loadPortfolioFromCloud();
                 } else {
+                    // --- USER IS LOGGED OUT ---
                     currentUser = null;
-                    updateAuthUI(null);
-                    // Fallback to local cache if not logged in
-                    if(localStorage.getItem('ngx_pulse_state')) {
-                        try { systemState = JSON.parse(localStorage.getItem('ngx_pulse_state')); } 
-                        catch(e) { console.error("Cache fallbacks initialized", e); }
-                    } else {
-                        // Empty initial state if no cache
-                        systemState = { usdToNgnRate: 1510.50, usdRateManualOverride: false, brokers: ['Trove', 'Wealth'], stocks: [], funds: [], pensions: [], usdAssets: [], loans: [], incomes: [], budgets: [] };
-                    }
-                    migrateLegacyState();
-                    refreshAllData();
+                    
+                    // Switch UI
+                    authScreen.classList.remove('hidden');
+                    authScreen.classList.add('flex');
+                    appDashboard.classList.add('hidden');
+                    appDashboard.classList.remove('flex');
+                    
+                    // Reset inputs
+                    document.getElementById('auth-email').value = '';
+                    document.getElementById('auth-password').value = '';
                 }
             });
         });
@@ -694,7 +734,8 @@
                 migrateLegacyState();
                 refreshAllData();
             } else if (error && error.code === 'PGRST116') {
-                // First time user, initialize remote data record with current local state
+                // First time user, initialize remote data record with default blank state
+                systemState = { usdToNgnRate: 1510.50, usdRateManualOverride: false, brokers: ['Trove', 'Wealth'], stocks: [], funds: [], pensions: [], usdAssets: [], loans: [], incomes: [], budgets: [] };
                 migrateLegacyState();
                 await persistState();
                 refreshAllData();
@@ -702,9 +743,6 @@
         }
 
         async function persistState() {
-            // Save locally for cache/offline
-            localStorage.setItem('ngx_pulse_state', JSON.stringify(systemState));
-
             // Sync to Supabase Cloud if signed in
             if (currentUser) {
                 await supabase.from('portfolios').upsert({
@@ -716,36 +754,31 @@
         }
 
         // 4. AUTH HANDLERS
-        function updateAuthUI(email) {
-            const emailDisplay = document.getElementById('user-email-display');
-            const authBtn = document.getElementById('auth-action-btn');
-            if (email) {
-                emailDisplay.innerText = email;
-                authBtn.innerText = 'Sign Out';
-                authBtn.onclick = handleSignOut;
-                authBtn.className = "bg-rose-600/20 text-rose-400 border border-rose-500/20 hover:bg-rose-600/30 font-bold px-2.5 py-1 rounded transition";
-            } else {
-                emailDisplay.innerText = 'Guest Mode';
-                authBtn.innerText = 'Log In';
-                authBtn.onclick = () => openModal('auth-modal');
-                authBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded transition";
-            }
-        }
-
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
-            document.getElementById('auth-title').innerText = isSignUpMode ? 'Create New Account' : 'Account Sign In';
-            document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
+            document.getElementById('auth-title').innerText = isSignUpMode ? 'Create a new account' : 'Sign in to access your ledger';
+            document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Create Account' : 'Sign In';
             document.getElementById('auth-toggle-btn').innerText = isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
+            document.getElementById('auth-error').classList.add('hidden');
         }
 
         async function handleAuthSubmit() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const errorEl = document.getElementById('auth-error');
+            const submitBtn = document.getElementById('auth-submit-btn');
             errorEl.classList.add('hidden');
 
-            if(!email || !password) return;
+            if(!email || !password) {
+                errorEl.innerText = "Please enter both email and password.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            // Visual feedback
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'Processing...';
+            submitBtn.disabled = true;
 
             let result;
             if (isSignUpMode) {
@@ -754,12 +787,14 @@
                 result = await supabase.auth.signInWithPassword({ email, password });
             }
 
+            submitBtn.innerText = originalBtnText;
+            submitBtn.disabled = false;
+
             if (result.error) {
                 errorEl.innerText = result.error.message;
                 errorEl.classList.remove('hidden');
-            } else {
-                closeModal('auth-modal');
             }
+            // On success, the onAuthStateChange listener automatically handles UI swapping
         }
 
         async function handleSignOut() {
@@ -1023,9 +1058,6 @@
             });
         }
 
-        /* -------------------------------------------------------------
-           PORTFOLIO: EDIT & DELETE OTHER ASSETS (FUNDS, PENSION, USD)
-        ------------------------------------------------------------- */
         function renderFundsTable(costSub, valSub, grandTotal) {
             const tbody = document.getElementById('funds-table-body'); tbody.innerHTML = '';
             systemState.funds.forEach((f, idx) => {
@@ -1158,9 +1190,6 @@
             }
         }
 
-        /* -------------------------------------------------------------
-           LOANS ENGINE: BATCH REPAYMENT SUPPORT
-        ------------------------------------------------------------- */
         function formatDateLocal(d) {
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -1254,9 +1283,6 @@
             }
         }
 
-        /* -------------------------------------------------------------
-           BUDGET ENGINE: EDIT & DELETE CATEGORIES & EXPENDITURES
-        ------------------------------------------------------------- */
         function processBudgetEngine() {
             renderIncomeList();
             const totalIncome = (systemState.incomes || []).reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
@@ -1379,9 +1405,6 @@
             }
         }
 
-        /* -------------------------------------------------------------
-           STOCKS MODAL & BROKER MANAGERS
-        ------------------------------------------------------------- */
         function openStockModal(ticker = null) {
             const existing = ticker ? systemState.stocks.find(s => s.ticker === ticker) : null;
             document.getElementById('stock-ticker').value = existing ? existing.ticker : '';
