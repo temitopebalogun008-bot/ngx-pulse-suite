@@ -61,8 +61,8 @@
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
                     <div class="relative flex items-center">
-                        <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 pr-10 text-sm text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){handleAuthSubmit();}">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 text-slate-500 hover:text-emerald-400 transition focus:outline-none">
+                        <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 pr-10 text-sm text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){window.handleAuthSubmit();}">
+                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-3 text-slate-500 hover:text-emerald-400 transition focus:outline-none">
                             <!-- Eye Closed Icon -->
                             <svg id="eye-icon-closed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
@@ -77,10 +77,10 @@
                 </div>
             </div>
             
-            <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-3 rounded-xl border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)] transition mt-2">Sign In</button>
+            <button onclick="window.handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-3 rounded-xl border border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)] transition mt-2">Sign In</button>
             
             <div class="text-center pt-2 border-t border-slate-800/60 mt-6">
-                <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs text-slate-400 hover:text-emerald-400 transition">Don't have an account? Sign Up</button>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle-btn" class="text-xs text-slate-400 hover:text-emerald-400 transition">Don't have an account? Sign Up</button>
             </div>
         </div>
     </div>
@@ -659,10 +659,15 @@
     <!-- SYSTEMS CONTROLLER / ARCHITECTURE ENGINES  -->
     <!-- ========================================== -->
     <script>
-        // 1. SUPABASE CONFIGURATION
-        const SUPABASE_URL = 'https://smcnvmylvgwuiohqaiaw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtY252bXlsdmd3dWlvaHFhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MDg2NDIsImV4cCI6MjEwMDI4NDY0Mn0.hBTOo1d86EMf7PUysqpdEBAYIMz2VoQCN0WQb7Yw1CI';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Use a wrapper to prevent the whole script block from crashing if Supabase fails to load
+        try {
+            // 1. SUPABASE CONFIGURATION
+            const SUPABASE_URL = 'https://smcnvmylvgwuiohqaiaw.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtY252bXlsdmd3dWlvaHFhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MDg2NDIsImV4cCI6MjEwMDI4NDY0Mn0.hBTOo1d86EMf7PUysqpdEBAYIMz2VoQCN0WQb7Yw1CI';
+            window.supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        } catch (error) {
+            console.error("Supabase failed to initialize:", error);
+        }
 
         let currentUser = null;
         let isSignUpMode = false;
@@ -694,7 +699,12 @@
 
         // 2. INITIALIZATION & ROUTING VIA AUTH STATE
         window.addEventListener('DOMContentLoaded', async () => {
-            supabase.auth.onAuthStateChange(async (event, session) => {
+            if (!window.supabaseClient) {
+                window.showAuthMessage("Failed to connect to the cloud database. Check your network or adblocker.", false);
+                return;
+            }
+
+            window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
                 const authScreen = document.getElementById('auth-screen');
                 const appDashboard = document.getElementById('app-dashboard');
                 
@@ -737,8 +747,8 @@
 
         // 3. CLOUD DATA PERSISTENCE
         async function loadPortfolioFromCloud() {
-            if (!currentUser) return;
-            const { data, error } = await supabase
+            if (!currentUser || !window.supabaseClient) return;
+            const { data, error } = await window.supabaseClient
                 .from('portfolios')
                 .select('state')
                 .eq('user_id', currentUser.id)
@@ -758,9 +768,8 @@
         }
 
         async function persistState() {
-            // Sync to Supabase Cloud if signed in
-            if (currentUser) {
-                await supabase.from('portfolios').upsert({
+            if (currentUser && window.supabaseClient) {
+                await window.supabaseClient.from('portfolios').upsert({
                     user_id: currentUser.id,
                     state: systemState,
                     updated_at: new Date().toISOString()
@@ -768,9 +777,9 @@
             }
         }
 
-        // 4. AUTH HANDLERS
+        // 4. AUTH HANDLERS explicitly bound to window
         
-        function togglePasswordVisibility() {
+        window.togglePasswordVisibility = function() {
             const pwdInput = document.getElementById('auth-password');
             const eyeClosed = document.getElementById('eye-icon-closed');
             const eyeOpen = document.getElementById('eye-icon-open');
@@ -784,17 +793,17 @@
                 eyeClosed.classList.remove('hidden');
                 eyeOpen.classList.add('hidden');
             }
-        }
+        };
 
-        function toggleAuthMode() {
+        window.toggleAuthMode = function() {
             isSignUpMode = !isSignUpMode;
             document.getElementById('auth-title').innerText = isSignUpMode ? 'Create a new account' : 'Sign in to access your ledger';
             document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Create Account' : 'Sign In';
             document.getElementById('auth-toggle-btn').innerText = isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
             document.getElementById('auth-error').classList.add('hidden');
-        }
+        };
 
-        function showAuthMessage(msg, isSuccess = false) {
+        window.showAuthMessage = function(msg, isSuccess = false) {
             const errorEl = document.getElementById('auth-error');
             errorEl.innerText = msg;
             errorEl.classList.remove('hidden');
@@ -804,9 +813,14 @@
             } else {
                 errorEl.className = "text-xs p-3 rounded-lg text-center text-rose-400 bg-rose-500/10 border border-rose-500/20";
             }
-        }
+        };
 
-        async function handleAuthSubmit() {
+        window.handleAuthSubmit = async function() {
+            if (!window.supabaseClient) {
+                window.showAuthMessage("Supabase client not loaded. Check network.", false);
+                return;
+            }
+
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             const submitBtn = document.getElementById('auth-submit-btn');
@@ -814,7 +828,7 @@
             document.getElementById('auth-error').classList.add('hidden');
 
             if(!email || !password) {
-                showAuthMessage("Please enter both email and password.", false);
+                window.showAuthMessage("Please enter both email and password.", false);
                 return;
             }
 
@@ -827,9 +841,9 @@
             try {
                 let result;
                 if (isSignUpMode) {
-                    result = await supabase.auth.signUp({ email, password });
+                    result = await window.supabaseClient.auth.signUp({ email, password });
                 } else {
-                    result = await supabase.auth.signInWithPassword({ email, password });
+                    result = await window.supabaseClient.auth.signInWithPassword({ email, password });
                 }
 
                 // Reset button visual state
@@ -838,14 +852,12 @@
                 submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
 
                 if (result.error) {
-                    showAuthMessage(result.error.message, false);
+                    window.showAuthMessage(result.error.message, false);
                 } else if (isSignUpMode && result.data && !result.data.session) {
-                    // Supabase requires email verification (Default setting)
-                    showAuthMessage("Success! Please check your email inbox to verify your account before logging in.", true);
+                    window.showAuthMessage("Success! Please check your email inbox to verify your account before logging in.", true);
                     
-                    // Automatically toggle back to login mode so they can sign in after verifying
                     setTimeout(() => {
-                        if(isSignUpMode) toggleAuthMode();
+                        if(isSignUpMode) window.toggleAuthMode();
                         document.getElementById('auth-email').value = email;
                         document.getElementById('auth-password').value = '';
                     }, 1500);
@@ -854,12 +866,12 @@
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                showAuthMessage("An unexpected system error occurred. Please try again.", false);
+                window.showAuthMessage("An unexpected system error occurred. Please try again.", false);
             }
-        }
+        };
 
-        async function handleSignOut() {
-            await supabase.auth.signOut();
+        function handleSignOut() {
+            if (window.supabaseClient) window.supabaseClient.auth.signOut();
         }
 
         // 5. CORE UI AND LOGIC
