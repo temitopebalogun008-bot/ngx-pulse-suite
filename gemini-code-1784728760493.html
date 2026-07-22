@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGX Portfolio Ledger & Wealth Suite</title>
+    <!-- Tailwind CSS for modern, premium dark UI styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js for beautiful, responsive visualization metrics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS Client for Cloud Auth & DB -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0B0F13;
+            color: #E2E8F0;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F13;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- Top Premium Navigation Bar -->
+    <header class="border-b border-slate-800 bg-[#0F141C] sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap justify-between items-center gap-4 md:gap-6">
+        <div class="flex items-center space-x-3">
+            <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white tracking-tight">NGX Pulse Wealth Suite</h1>
+                <p class="text-xs text-slate-400">Unified Portfolio, Liabilities & Capital Ledger</p>
+            </div>
+        </div>
+
+        <!-- Multi-Page Tab System Controls -->
+        <nav class="flex bg-[#0B0F13] p-1.5 rounded-xl border border-slate-800 space-x-1">
+            <button onclick="switchTab('portfolio')" id="tab-portfolio" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                Portfolio Engine
+            </button>
+            <button onclick="switchTab('loans')" id="tab-loans" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l2-2 4 4m0-7l3 3m0 0l-3 3m3-3H8m2 6h.01M17 16h.01M13 16h.01M17 12h.01M13 12h.01M9 12h.01M17 8h.01M13 8h.01M9 8h.01M13 4h.01M9 4h.01M5 4h.01M5 8h.01M5 12h.01M5 16h.01"></path></svg>
+                Liabilities & Loans
+            </button>
+            <button onclick="switchTab('budgeting')" id="tab-budgeting" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                Capital Budgeting
+            </button>
+        </nav>
+
+        <!-- Dynamic Exchange Rates Status & Auth -->
+        <div class="flex items-center space-x-4">
+            
+            <!-- Auth Container -->
+            <div id="auth-status-container" class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-xs">
+                <span id="user-email-display" class="text-slate-300 font-medium truncate max-w-[120px]">Guest Mode</span>
+                <button id="auth-action-btn" onclick="openModal('auth-modal')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded transition">Log In</button>
+            </div>
+
+            <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden lg:flex">
+                <span id="usd-rate-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-slate-400 font-medium">USD/NGN Official Rate:</span>
+                <span class="text-white font-bold">₦</span>
+                <input type="number" id="usd-rate-input" step="0.01" min="0" class="bg-transparent text-white font-bold w-24 focus:outline-none border-b border-dashed border-slate-700 focus:border-emerald-500 transition" placeholder="Fetching..." onchange="updateUsdRateManually(this.value)">
+                <button onclick="resetUsdRateToLive()" class="text-slate-500 hover:text-white transition">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
+                </button>
+            </div>
+            <div class="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-xs flex items-center gap-2 hidden md:flex">
+                <span class="text-slate-400 font-medium">NGX Pulse Feed:</span>
+                <span id="stock-sync-badge" class="text-white font-bold">Not synced yet</span>
+            </div>
+            <button onclick="refreshAllData()" class="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-2 rounded-lg text-xs transition border border-slate-700 flex items-center gap-1.5 shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
+                <span class="hidden sm:inline">Sync Market Data</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 max-w-7xl w-full mx-auto space-y-10">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: RE-ENGINEERED PORTFOLIO LEDGER -->
+        <!-- ========================================== -->
+        <div id="view-portfolio" class="space-y-6">
+            
+            <!-- DUAL AMBIENT COOL/WARM GRADIENT SCREEN TICKER -->
+            <div class="p-[1.5px] rounded-xl bg-gradient-to-r from-cyan-400 via-blue-600 via-purple-600 to-amber-500 shadow-[0_0_25px_rgba(59,130,246,0.15)] shadow-[0_0_25px_rgba(245,158,11,0.15)]">
+                <div id="ticker-tape-container" class="bg-[#0F141C]/95 backdrop-blur-md rounded-xl p-2.5 overflow-hidden min-h-[46px]">
+                </div>
+            </div>
+            
+            <!-- Macro Summary Financial KPI Blocks -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Portfolio Value</p>
+                    <p id="kpi-total-value" class="text-2xl font-bold text-white">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Capital Outlay</p>
+                    <p id="kpi-total-cost" class="text-2xl font-bold text-slate-300">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Absolute Return Gain/Loss</p>
+                    <p id="kpi-total-gain" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Overall Return on Investment</p>
+                    <p id="kpi-total-roi" class="text-2xl font-bold text-emerald-400">0.00%</p>
+                </div>
+            </div>
+
+            <!-- Visualization Dashboard Layer -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-1 flex flex-col justify-between shadow-xl min-h-[340px]">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Allocation By Asset Class
+                    </h3>
+                    <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
+                        <canvas id="assetAllocationChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-2 shadow-xl flex flex-col justify-between">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Real-time Performance Metrics By Class
+                    </h3>
+                    <div class="relative flex-1 flex items-center justify-center max-h-[240px]">
+                        <canvas id="assetPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSET CLASS 1: STOCKS LEDGER -->
+            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">1. Equities Portfolio (Stocks)</h2>
+                        <p class="text-xs text-slate-400">Calculated via Average Cost per Broker matrix. Live feed synced from NGX Pulse.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openBrokerModal()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-slate-700 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 100-8 4 4 0 000 8zm6 3a4 4 0 00-3-3.87M9 12a4 4 0 100-8 4 4 0 000 8z"></path></svg> Manage Brokers
+                        </button>
+                        <button onclick="openStockModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Equities Position
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead id="stocks-table-head" class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800"></thead>
+                        <tbody id="stocks-table-body" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ASSET CLASS 2: MUTUAL FUNDS & SAVINGS LEDGER -->
+            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">2. Mutual Funds & Yield Savings</h2>
+                        <p class="text-xs text-slate-400">Computed via Outlay Cost + Interest Accrued mechanics.</p>
+                    </div>
+                    <button onclick="openFundModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Income Fund
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                <th class="px-6 py-3">Fund / Savings Provider Name</th>
+                                <th class="px-6 py-3 text-right">Base Capital Cost</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">Interest Earned</th>
+                                <th class="px-6 py-3 text-right font-medium text-slate-300">Current Market Value</th>
+                                <th class="px-6 py-3 text-right font-medium text-slate-300">Absolute ROI %</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                <th class="px-6 py-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="funds-table-body" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ASSET CLASS 3: PENSION ASSETS LEDGER -->
+            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">3. Pension Accounts (PFA Asset Class)</h2>
+                        <p class="text-xs text-slate-400">Valued using Base Historical Cost + Accumulated Compounded Growth.</p>
+                    </div>
+                    <button onclick="openPensionModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Link Pension Account
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                <th class="px-6 py-3">Pension Fund Administrator (PFA)</th>
+                                <th class="px-6 py-3 text-right">Base Contributions Cost</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">Accumulated Growth</th>
+                                <th class="px-6 py-3 text-right font-medium text-slate-300">Current Liquidity Value</th>
+                                <th class="px-6 py-3 text-right font-medium text-slate-300">Total Gain %</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                <th class="px-6 py-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pension-table-body" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ASSET CLASS 4: USD DENOMINATED ASSETS LEDGER -->
+            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">4. USD Denominated Assets</h2>
+                        <p class="text-xs text-slate-400">Values tracked in USD and multiplied in real-time by the official central exchange rate into NGN.</p>
+                    </div>
+                    <button onclick="openUsdModal(-1)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-emerald-500 shadow-sm flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Add Foreign Asset
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                <th class="px-6 py-3">Asset Designation</th>
+                                <th class="px-6 py-3 text-right">Principal (USD)</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">Interest (USD)</th>
+                                <th class="px-6 py-3 text-right text-slate-300">Value (USD)</th>
+                                <th class="px-6 py-3 text-right font-bold text-emerald-400">Value (NGN Equivalent)</th>
+                                <th class="px-6 py-3 text-right text-emerald-400">% Portfolio</th>
+                                <th class="px-6 py-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usd-table-body" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: LOANS & LIABILITIES -->
+        <div id="view-loans" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Principal Borrowed</p>
+                    <p id="kpi-loan-principal" class="text-2xl font-bold text-white">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Accrued Reducing Interest</p>
+                    <p id="kpi-loan-interest" class="text-2xl font-bold text-rose-400">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Outstanding Liabilities</p>
+                    <p id="kpi-loan-outstanding" class="text-2xl font-bold text-rose-500">₦0.00</p>
+                </div>
+            </div>
+
+            <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl">
+                <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">Liabilities & Outstanding Loans Ledger</h2>
+                        <p class="text-xs text-slate-400">Calculated strictly on a <b>Daily Reducing Balance model</b>. Repayments support multiple batches/tranches.</p>
+                    </div>
+                    <button onclick="openModal('loan-modal')" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs px-3 py-2 rounded-lg transition border border-rose-500 shadow-sm flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Log Active Debt Facility
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                <th class="px-4 py-3">Debt Facility Provider</th>
+                                <th class="px-4 py-3 text-right">Principal Borrowed</th>
+                                <th class="px-4 py-3 text-center">Origination Date</th>
+                                <th class="px-4 py-3 text-right">Annual Rate</th>
+                                <th class="px-4 py-3 text-right text-rose-400">Accrued Int. (Daily)</th>
+                                <th class="px-4 py-3 text-right text-emerald-400">Total Repaid</th>
+                                <th class="px-4 py-3 text-right font-bold text-rose-500">Current Balance</th>
+                                <th class="px-4 py-3"><span class="block px-2">Batch Repayment History</span></th>
+                                <th class="px-4 py-3 text-center">Action Options</th>
+                            </tr>
+                        </thead>
+                        <tbody id="loans-table-body" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: BUDGETING -->
+        <div id="view-budgeting" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Total Household Income</p>
+                    <p id="kpi-budget-income" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Allocated Budget Cap</p>
+                    <p id="kpi-budget-allocated" class="text-2xl font-bold text-white">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Actual Logged Expenditures</p>
+                    <p id="kpi-budget-actual" class="text-2xl font-bold text-blue-400">₦0.00</p>
+                </div>
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Net Free Cash Runway</p>
+                    <p id="kpi-budget-variance" class="text-2xl font-bold text-emerald-400">₦0.00</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 shadow-xl space-y-5 h-fit">
+                    <div>
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-slate-800 pb-2 mb-3">Household Income Sources</h3>
+                        <p class="text-xs text-slate-500 mb-3 leading-relaxed">This is a household budget — add every income source it draws on.</p>
+                        <div id="income-list" class="space-y-2 mb-4"></div>
+                        <div class="space-y-3 border-t border-slate-800/60 pt-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Income Source Name</label>
+                                <input type="text" id="new-income-name" placeholder="e.g. Primary Salary" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Monthly Amount (₦)</label>
+                                <input type="number" id="new-income-amount" min="0" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){addIncomeSource();}">
+                            </div>
+                            <button onclick="addIncomeSource()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Add Income Source</button>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-800/60 pt-4">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase mb-2">Create Envelope Category</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Category Label Name</label>
+                                <input type="text" id="new-budget-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Monthly Cost Ceiling Cap (₦)</label>
+                                <input type="number" id="new-budget-cap" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
+                            </div>
+                            <button onclick="addBudgetCategory()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2 rounded-lg transition border border-emerald-500 shadow-sm">Provision Budget Category</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-xl lg:col-span-2">
+                    <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800">
+                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Dynamic Budget Allocation Envelopes</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/40 text-slate-400 uppercase font-semibold tracking-wider border-b border-slate-800">
+                                    <th class="px-6 py-3">Spending Category Envelope</th>
+                                    <th class="px-6 py-3 text-right">Allocated Cap Cost</th>
+                                    <th class="px-6 py-3 text-right">Actual Outflows</th>
+                                    <th class="px-6 py-3 text-right">Variance Delta</th>
+                                    <th class="px-6 py-3 text-center">Status Health</th>
+                                    <th class="px-6 py-3 text-center">Actions / Modification</th>
+                                </tr>
+                            </thead>
+                            <tbody id="budget-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 id="auth-title" class="font-bold text-white text-base">Account Sign In</h3>
+                <button onclick="closeModal('auth-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <p id="auth-error" class="text-xs text-rose-400 hidden"></p>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Email Address</label>
+                    <input type="email" id="auth-email" placeholder="name@example.com" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+            <button onclick="handleAuthSubmit()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Sign In</button>
+            <div class="text-center">
+                <button onclick="toggleAuthMode()" id="auth-toggle-btn" class="text-xs text-slate-400 hover:text-emerald-400 transition">Don't have an account? Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE MODAL OVERLAYS -->
+    <div id="stock-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
+                <h3 id="stock-modal-title" class="font-bold text-white text-sm uppercase">Add / Adjust Equities Position</h3>
+                <button onclick="closeModal('stock-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 overflow-y-auto">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Stock Ticker Symbol</label>
+                    <input type="text" id="stock-ticker" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50" placeholder="e.g. GTCO">
+                </div>
+                <div id="stock-broker-fields" class="space-y-3"></div>
+                <div class="border-t border-slate-800/60 pt-4">
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Manual Price Override (₦) <span class="text-slate-600">— optional</span></label>
+                    <input type="number" id="stock-manual-price" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="Leave blank to auto-sync from NGX Pulse">
+                </div>
+                <button onclick="saveStockAsset()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Commit Asset Position</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTHER POSITION MODALS -->
+    <div id="broker-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm uppercase">Manage Brokers</h3>
+                <button onclick="closeModal('broker-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <div id="broker-list" class="flex flex-wrap gap-2"></div>
+                <div class="flex gap-2">
+                    <input type="text" id="new-broker-name" placeholder="e.g. Chaka, Bamboo" class="flex-1 bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" onkeydown="if(event.key==='Enter'){addBroker();}">
+                    <button onclick="addBroker()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-4 rounded-lg border border-emerald-500 shadow transition">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fund-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 id="fund-modal-title" class="font-bold text-white text-sm uppercase">Add / Edit Mutual Fund Account</h3>
+                <button onclick="closeModal('fund-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="fund-edit-index" value="-1">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Fund / Institution Name</label>
+                    <input type="text" id="fund-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Base Capital Cost Outlay (₦)</label>
+                    <input type="number" id="fund-cost" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Accumulated Total Interest Earned (₦)</label>
+                    <input type="number" id="fund-interest" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="saveFundAsset()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Commit Asset Position</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pension-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 id="pension-modal-title" class="font-bold text-white text-sm uppercase">Link / Edit Pension Allocation (PFA)</h3>
+                <button onclick="closeModal('pension-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="pension-edit-index" value="-1">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Pension Fund Administrator</label>
+                    <input type="text" id="pension-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Base Contributions Outlay Cost (₦)</label>
+                    <input type="number" id="pension-cost" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Accumulated Portfolio Market Growth (₦)</label>
+                    <input type="number" id="pension-interest" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="savePensionAsset()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Commit Asset Position</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="usd-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 id="usd-modal-title" class="font-bold text-white text-sm uppercase">Add / Edit Foreign USD Capital Position</h3>
+                <button onclick="closeModal('usd-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="usd-edit-index" value="-1">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Asset Allocation Identifier</label>
+                    <input type="text" id="usd-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Base Principal Cost Outlay ($ USD)</label>
+                    <input type="number" id="usd-cost" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Accumulated Interest Accrued ($ USD)</label>
+                    <input type="number" id="usd-interest" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="saveUsdAsset()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Commit Asset Position</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REPAYMENT BATCH MODAL -->
+    <div id="repayment-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm uppercase">Log Debt Batch Repayment</h3>
+                <button onclick="closeModal('repayment-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="repayment-loan-id">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Repayment Batch Sum Disbursed (₦)</label>
+                    <input type="number" id="repayment-amount" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Execution Payment Date</label>
+                    <input type="date" id="repayment-date" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="saveLoanRepayment()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Commit Batch Payment Record</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loan-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm uppercase">Log Active Liabilities Contract</h3>
+                <button onclick="closeModal('loan-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Debt Capital Provider</label>
+                    <input type="text" id="loan-provider" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Total Principal Borrowed Face Value (₦)</label>
+                    <input type="number" id="loan-amount" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Capital Origination Date</label>
+                    <input type="date" id="loan-date" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Nominal Annual Interest Rate (%)</label>
+                    <input type="number" step="0.01" id="loan-rate" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+                </div>
+                <button onclick="saveNewLoan()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-rose-500 shadow transition">Provision Debt Facility</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUDGET LOG EXPENSE MODAL -->
+    <div id="expense-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm uppercase">Log Outflow Expenditure</h3>
+                <button onclick="closeModal('expense-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="expense-category-index">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Expenditure Sum Outflow (₦)</label>
+                    <input type="number" id="expense-amount" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="saveBudgetExpense()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-blue-500 shadow transition">Log Expense Outflow</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT BUDGET CATEGORY ENVELOPE MODAL -->
+    <div id="budget-category-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white text-sm uppercase">Edit Budget Envelope</h3>
+                <button onclick="closeModal('budget-category-modal')" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="budget-edit-index" value="-1">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Category Label Name</label>
+                    <input type="text" id="edit-budget-name" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Monthly Cost Ceiling Cap (₦)</label>
+                    <input type="number" id="edit-budget-cap" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Actual Outflows / Expenditures Logged (₦)</label>
+                    <input type="number" id="edit-budget-actual" class="w-full bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="saveBudgetCategoryModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs py-2.5 rounded-lg border border-emerald-500 shadow transition">Save Envelope Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-slate-800 bg-[#0F141C] text-center py-4 px-6 text-xs text-slate-500 mt-auto">
+        NGX Pulse Core Engine System • All Ledger Math processing localized.
+    </footer>
+
+    <!-- SYSTEMS CONTROLLER / ARCHITECTURE ENGINES  -->
+    <script>
+        // 1. SUPABASE CONFIGURATION
+        const SUPABASE_URL = 'https://smcnvmylvgwuiohqaiaw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtY252bXlsdmd3dWlvaHFhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MDg2NDIsImV4cCI6MjEwMDI4NDY0Mn0.hBTOo1d86EMf7PUysqpdEBAYIMz2VoQCN0WQb7Yw1CI';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let isSignUpMode = false;
+
+        const BROKER_COLOR_PALETTE = [
+            { bg: 'bg-blue-950/10',   head: 'bg-blue-950/20',   text: 'text-blue-300',   value: 'text-blue-400' },
+            { bg: 'bg-purple-950/10', head: 'bg-purple-950/20', text: 'text-purple-300', value: 'text-purple-400' },
+            { bg: 'bg-amber-950/10',  head: 'bg-amber-950/20',  text: 'text-amber-300',  value: 'text-amber-400' }
+        ];
+
+        const NGX_PULSE_STOCKS_ENDPOINT = '/.netlify/functions/prices';
+
+        let systemState = {
+            usdToNgnRate: 1510.50,
+            usdRateManualOverride: false,
+            brokers: ['Trove', 'Wealth'],
+            stocks: [],
+            funds: [],
+            pensions: [],
+            usdAssets: [],
+            loans: [],
+            incomes: [],
+            budgets: []
+        };
+
+        let allocationChartInstance = null;
+        let performanceChartInstance = null;
+        let lastRenderedTickersStr = '';
+
+        // 2. INITIALIZATION & AUTH STATE MONITORING
+        window.addEventListener('DOMContentLoaded', async () => {
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (session?.user) {
+                    currentUser = session.user;
+                    updateAuthUI(currentUser.email);
+                    await loadPortfolioFromCloud();
+                } else {
+                    currentUser = null;
+                    updateAuthUI(null);
+                    // Fallback to local cache if not logged in
+                    if(localStorage.getItem('ngx_pulse_state')) {
+                        try { systemState = JSON.parse(localStorage.getItem('ngx_pulse_state')); } 
+                        catch(e) { console.error("Cache fallbacks initialized", e); }
+                    } else {
+                        // Empty initial state if no cache
+                        systemState = { usdToNgnRate: 1510.50, usdRateManualOverride: false, brokers: ['Trove', 'Wealth'], stocks: [], funds: [], pensions: [], usdAssets: [], loans: [], incomes: [], budgets: [] };
+                    }
+                    migrateLegacyState();
+                    refreshAllData();
+                }
+            });
+        });
+
+        // 3. CLOUD DATA PERSISTENCE
+        async function loadPortfolioFromCloud() {
+            if (!currentUser) return;
+            const { data, error } = await supabase
+                .from('portfolios')
+                .select('state')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            if (data && data.state) {
+                systemState = data.state;
+                migrateLegacyState();
+                refreshAllData();
+            } else if (error && error.code === 'PGRST116') {
+                // First time user, initialize remote data record with current local state
+                migrateLegacyState();
+                await persistState();
+                refreshAllData();
+            }
+        }
+
+        async function persistState() {
+            // Save locally for cache/offline
+            localStorage.setItem('ngx_pulse_state', JSON.stringify(systemState));
+
+            // Sync to Supabase Cloud if signed in
+            if (currentUser) {
+                await supabase.from('portfolios').upsert({
+                    user_id: currentUser.id,
+                    state: systemState,
+                    updated_at: new Date().toISOString()
+                });
+            }
+        }
+
+        // 4. AUTH HANDLERS
+        function updateAuthUI(email) {
+            const emailDisplay = document.getElementById('user-email-display');
+            const authBtn = document.getElementById('auth-action-btn');
+            if (email) {
+                emailDisplay.innerText = email;
+                authBtn.innerText = 'Sign Out';
+                authBtn.onclick = handleSignOut;
+                authBtn.className = "bg-rose-600/20 text-rose-400 border border-rose-500/20 hover:bg-rose-600/30 font-bold px-2.5 py-1 rounded transition";
+            } else {
+                emailDisplay.innerText = 'Guest Mode';
+                authBtn.innerText = 'Log In';
+                authBtn.onclick = () => openModal('auth-modal');
+                authBtn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded transition";
+            }
+        }
+
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('auth-title').innerText = isSignUpMode ? 'Create New Account' : 'Account Sign In';
+            document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Sign Up' : 'Sign In';
+            document.getElementById('auth-toggle-btn').innerText = isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
+        }
+
+        async function handleAuthSubmit() {
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+            const errorEl = document.getElementById('auth-error');
+            errorEl.classList.add('hidden');
+
+            if(!email || !password) return;
+
+            let result;
+            if (isSignUpMode) {
+                result = await supabase.auth.signUp({ email, password });
+            } else {
+                result = await supabase.auth.signInWithPassword({ email, password });
+            }
+
+            if (result.error) {
+                errorEl.innerText = result.error.message;
+                errorEl.classList.remove('hidden');
+            } else {
+                closeModal('auth-modal');
+            }
+        }
+
+        async function handleSignOut() {
+            await supabase.auth.signOut();
+        }
+
+        // 5. CORE UI AND LOGIC
+        function migrateLegacyState() {
+            if(!systemState.incomes) {
+                systemState.incomes = systemState.budgetIncome
+                    ? [{ id: 'INC-1001', name: 'Primary Income', amount: systemState.budgetIncome }]
+                    : [];
+                delete systemState.budgetIncome;
+            }
+            if(!systemState.brokers) systemState.brokers = ['Trove', 'Wealth'];
+            if(!systemState.stocks) systemState.stocks = [];
+            systemState.stocks.forEach(s => {
+                if(!s.holdings) {
+                    s.holdings = {
+                        Trove: { cost: s.troveCost || 0, units: s.troveUnits || 0 },
+                        Wealth: { cost: s.wealthCost || 0, units: s.wealthUnits || 0 }
+                    };
+                }
+                systemState.brokers.forEach(b => {
+                    if(!s.holdings[b]) s.holdings[b] = { cost: 0, units: 0 };
+                });
+            });
+        }
+
+        function switchTab(targetTab) {
+            ['portfolio', 'loans', 'budgeting'].forEach(tab => {
+                document.getElementById(`view-${tab}`).classList.add('hidden');
+                document.getElementById(`tab-${tab}`).className = "px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2";
+            });
+            document.getElementById(`view-${targetTab}`).classList.remove('hidden');
+            document.getElementById(`tab-${targetTab}`).className = "px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2";
+            if(targetTab === 'portfolio') recomputeAllLedgers();
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+
+        async function refreshAllData() {
+            await fetchOfficialUsdRate();
+            await syncAllStockPrices();
+        }
+
+        async function fetchOfficialUsdRate() {
+            if(systemState.usdRateManualOverride) return;
+            try {
+                const res = await fetch('https://open.er-api.com/v6/latest/USD');
+                const data = await res.json();
+                if(data?.rates?.NGN) systemState.usdToNgnRate = parseFloat(data.rates.NGN);
+            } catch(err) { console.warn("Fallback engine triggered", err); }
+            document.getElementById('usd-rate-input').value = systemState.usdToNgnRate.toFixed(2);
+        }
+
+        function updateUsdRateManually(value) {
+            const parsed = parseFloat(value);
+            if(!isNaN(parsed) && parsed > 0) {
+                systemState.usdToNgnRate = parsed;
+                systemState.usdRateManualOverride = true;
+                document.getElementById('usd-rate-dot').className = "w-2 h-2 rounded-full bg-amber-500";
+                recomputeAllLedgers();
+            }
+        }
+
+        async function resetUsdRateToLive() {
+            systemState.usdRateManualOverride = false;
+            document.getElementById('usd-rate-dot').className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+            await fetchOfficialUsdRate();
+            recomputeAllLedgers();
+        }
+
+        async function fetchNgxPulseStocks() {
+            const res = await fetch(NGX_PULSE_STOCKS_ENDPOINT);
+            if(!res.ok) throw new Error(`HTTP ${res.status}`);
+            const payload = await res.json();
+            return Array.isArray(payload) ? payload : (payload.data || payload.stocks || []);
+        }
+
+        async function syncStockPrice(ticker) {
+            const stock = systemState.stocks.find(s => s.ticker === ticker);
+            if(!stock) return false;
+            try {
+                const records = await fetchNgxPulseStocks();
+                const record = records.find(r => String(r.symbol || r.ticker || '').toUpperCase() === ticker.toUpperCase());
+                const price = parseFloat(record?.current_price ?? record?.price ?? record?.close ?? record?.livePrice);
+                if(isNaN(price) || price <= 0) throw new Error();
+                stock.livePrice = price;
+                stock.priceSource = 'live';
+                stock.lastSynced = new Date().toISOString();
+                return true;
+            } catch(err) {
+                stock.priceSource = stock.priceSource === 'live' ? 'stale' : 'manual';
+                return false;
+            }
+        }
+
+        async function syncAllStockPrices() {
+            const badge = document.getElementById('stock-sync-badge');
+            if(badge) badge.innerText = 'Syncing…';
+            try {
+                const records = await fetchNgxPulseStocks();
+                systemState.stocks.forEach(s => {
+                    const record = records.find(r => String(r.symbol || r.ticker || '').toUpperCase() === s.ticker.toUpperCase());
+                    const price = parseFloat(record?.current_price ?? record?.price ?? record?.close ?? record?.livePrice);
+                    if(record && !isNaN(price) && price > 0) {
+                        s.livePrice = price;
+                        s.priceSource = 'live';
+                        s.lastSynced = new Date().toISOString();
+                    } else {
+                        s.priceSource = s.priceSource === 'live' ? 'stale' : 'manual';
+                    }
+                });
+                if(badge) badge.innerText = `Live · ${new Date().toLocaleTimeString()}`;
+            } catch(err) {
+                systemState.stocks.forEach(s => { s.priceSource = s.priceSource === 'live' ? 'stale' : 'manual'; });
+                if(badge) badge.innerText = 'Cached fallback';
+            }
+            recomputeAllLedgers();
+        }
+
+        function renderTickerTape() {
+            const container = document.getElementById('ticker-tape-container');
+            if(!container) return;
+
+            const currentTickersStr = systemState.stocks.map(s => s.ticker).sort().join(',');
+            if (currentTickersStr === lastRenderedTickersStr) return; 
+            lastRenderedTickersStr = currentTickersStr;
+
+            container.innerHTML = '';
+
+            const symbolsMatrix = [
+                { "proName": "FX_IDC:USDNGN", "title": "USD/NGN Spot" }
+            ];
+
+            systemState.stocks.forEach(s => {
+                symbolsMatrix.push({
+                    "proName": `NSENG:${s.ticker}`,
+                    "title": s.ticker
+                });
+            });
+
+            symbolsMatrix.push(
+                { "proName": "FOREXCOM:SPX500", "title": "S&P 500 Index" },
+                { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin (USD)" }
+            );
+
+            const widgetWrapper = document.createElement('div');
+            widgetWrapper.className = 'tradingview-widget-container';
+            
+            const widgetSub = document.createElement('div');
+            widgetSub.className = 'tradingview-widget-container__widget';
+            widgetWrapper.appendChild(widgetSub);
+
+            const scriptEl = document.createElement('script');
+            scriptEl.type = 'text/javascript';
+            scriptEl.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+            scriptEl.async = true;
+            scriptEl.text = JSON.stringify({
+                "symbols": symbolsMatrix,
+                "showSymbolLogo": true,
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "displayMode": "adaptive",
+                "locale": "en"
+            });
+
+            widgetWrapper.appendChild(scriptEl);
+            container.appendChild(widgetWrapper);
+        }
+
+        function recomputeAllLedgers() {
+            let stocksCostSubtotal = 0, stocksValueSubtotal = 0;
+            systemState.stocks.forEach(s => {
+                const holdingValues = Object.values(s.holdings || {});
+                s.totalUnits = holdingValues.reduce((sum, h) => sum + (parseFloat(h.units) || 0), 0);
+                s.totalCost = holdingValues.reduce((sum, h) => sum + ((parseFloat(h.cost) || 0) * (parseFloat(h.units) || 0)), 0);
+                s.currentValue = s.totalUnits * (parseFloat(s.livePrice) || 0);
+                s.netReturn = s.currentValue - s.totalCost;
+                stocksCostSubtotal += s.totalCost;
+                stocksValueSubtotal += s.currentValue;
+            });
+
+            let fundsCostSubtotal = 0, fundsValueSubtotal = 0;
+            systemState.funds.forEach(f => {
+                f.currentValue = (parseFloat(f.cost) || 0) + (parseFloat(f.interest) || 0);
+                fundsCostSubtotal += (parseFloat(f.cost) || 0);
+                fundsValueSubtotal += f.currentValue;
+            });
+
+            let pensionCostSubtotal = 0, pensionValueSubtotal = 0;
+            systemState.pensions.forEach(p => {
+                p.currentValue = (parseFloat(p.cost) || 0) + (parseFloat(p.interest) || 0);
+                pensionCostSubtotal += (parseFloat(p.cost) || 0);
+                pensionValueSubtotal += p.currentValue;
+            });
+
+            let usdCostSubtotalNGN = 0, usdValueSubtotalNGN = 0;
+            systemState.usdAssets.forEach(u => {
+                u.valUSD = (parseFloat(u.cost) || 0) + (parseFloat(u.interest) || 0);
+                u.currentValueNGN = u.valUSD * systemState.usdToNgnRate;
+                u.costNGN = (parseFloat(u.cost) || 0) * systemState.usdToNgnRate;
+                usdCostSubtotalNGN += u.costNGN;
+                usdValueSubtotalNGN += u.currentValueNGN;
+            });
+
+            const grandTotalValue = stocksValueSubtotal + fundsValueSubtotal + pensionValueSubtotal + usdValueSubtotalNGN;
+            const grandTotalCost = stocksCostSubtotal + fundsCostSubtotal + pensionCostSubtotal + usdCostSubtotalNGN;
+            const absoluteGainLoss = grandTotalValue - grandTotalCost;
+            const combinedRoi = grandTotalCost > 0 ? (absoluteGainLoss / grandTotalCost) * 100 : 0;
+
+            document.getElementById('kpi-total-value').innerText = `₦${grandTotalValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            document.getElementById('kpi-total-cost').innerText = `₦${grandTotalCost.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            document.getElementById('kpi-total-gain').innerText = `₦${absoluteGainLoss.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            document.getElementById('kpi-total-roi').innerText = `${combinedRoi.toFixed(2)}%`;
+
+            renderStocksTable(stocksCostSubtotal, stocksValueSubtotal, grandTotalValue);
+            renderFundsTable(fundsCostSubtotal, fundsValueSubtotal, grandTotalValue);
+            renderPensionTable(pensionCostSubtotal, pensionValueSubtotal, grandTotalValue);
+            renderUsdTable(usdCostSubtotalNGN, usdValueSubtotalNGN, grandTotalValue);
+            processLoansEngine();
+            processBudgetEngine();
+            
+            renderTickerTape();
+            triggerChartRebuilds(stocksValueSubtotal, fundsValueSubtotal, pensionValueSubtotal, usdValueSubtotalNGN);
+            
+            // Persist after calculation
+            persistState();
+        }
+
+        function renderStocksTableHead() {
+            const thead = document.getElementById('stocks-table-head');
+            if(!thead) return;
+            const brokerHeaderCells = systemState.brokers.map((b, i) => {
+                const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
+                return `<th class="px-4 py-3 text-right ${palette.head} ${palette.text}">${b} Cost</th><th class="px-4 py-3 text-right ${palette.head} ${palette.text}">${b} Units</th>`;
+            }).join('');
+            thead.innerHTML = `<tr><th class="px-4 py-3">Ticker</th><th class="px-4 py-3 text-right">Live Price</th>${brokerHeaderCells}<th class="px-4 py-3 text-right">Total Units</th><th class="px-4 py-3 text-right">Cost Basis</th><th class="px-4 py-3 text-right">Value</th><th class="px-4 py-3 text-right">Net Return</th><th class="px-4 py-3 text-right">% Shares Owned</th><th class="px-4 py-3 text-right">% Portfolio</th><th class="px-4 py-3 text-center">Actions</th></tr>`;
+        }
+
+        function renderStocksTable(costSub, valSub, grandTotal) {
+            renderStocksTableHead();
+            const tbody = document.getElementById('stocks-table-body');
+            tbody.innerHTML = '';
+            systemState.stocks.forEach((s, idx) => {
+                const portfolioWeight = grandTotal > 0 ? (s.currentValue / grandTotal) * 100 : 0;
+                const sharesWeight = valSub > 0 ? (s.currentValue / valSub) * 100 : 0;
+                const roiPercent = s.totalCost > 0 ? (s.netReturn / s.totalCost) * 100 : 0;
+                const brokerCells = systemState.brokers.map((b, i) => {
+                    const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
+                    const h = s.holdings[b] || { cost: 0, units: 0 };
+                    return `<td class="px-4 py-3.5 text-right ${palette.bg} ${palette.text}">₦${(h.cost||0).toLocaleString()}</td><td class="px-4 py-3.5 text-right ${palette.bg} ${palette.value}">${h.units || 0}</td>`;
+                }).join('');
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40 text-slate-300";
+                tr.innerHTML = `<td class="px-4 py-3.5"><b>${s.ticker}</b></td><td class="px-4 py-3.5 text-right">₦${(s.livePrice||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>${brokerCells}<td class="px-4 py-3.5 text-right font-semibold">${s.totalUnits}</td><td class="px-4 py-3.5 text-right">₦${s.totalCost.toLocaleString()}</td><td class="px-4 py-3.5 text-right font-bold text-white">₦${s.currentValue.toLocaleString()}</td><td class="px-4 py-3.5 text-right ${s.netReturn>=0?'text-emerald-400':'text-rose-400'}">₦${s.netReturn.toLocaleString()}<br><span class="text-[10px]">${roiPercent.toFixed(1)}%</span></td><td class="px-4 py-3.5 text-right text-emerald-400">${sharesWeight.toFixed(2)}%</td><td class="px-4 py-3.5 text-right text-emerald-300">${portfolioWeight.toFixed(2)}%</td><td class="px-4 py-3.5 text-center space-y-1"><button onclick="syncStockPrice('${s.ticker}').then(recomputeAllLedgers)" class="block w-full bg-slate-800 text-[10px] px-2 py-1 rounded border border-slate-700">Sync Price</button><button onclick="openStockModal('${s.ticker}')" class="block w-full bg-blue-600/20 text-blue-400 text-[10px] px-2 py-1 rounded border border-blue-500/20">Edit</button><button onclick="deleteAsset('stocks', ${idx})" class="block w-full text-rose-500 text-[10px] py-0.5">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* -------------------------------------------------------------
+           PORTFOLIO: EDIT & DELETE OTHER ASSETS (FUNDS, PENSION, USD)
+        ------------------------------------------------------------- */
+        function renderFundsTable(costSub, valSub, grandTotal) {
+            const tbody = document.getElementById('funds-table-body'); tbody.innerHTML = '';
+            systemState.funds.forEach((f, idx) => {
+                const w = grandTotal > 0 ? (f.currentValue / grandTotal) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40 text-slate-300";
+                tr.innerHTML = `<td class="px-6 py-3.5">${f.name}</td><td class="px-6 py-3.5 text-right">₦${f.cost.toLocaleString()}</td><td class="px-6 py-3.5 text-right text-emerald-400">+₦${f.interest.toLocaleString()}</td><td class="px-6 py-3.5 text-right font-bold">₦${f.currentValue.toLocaleString()}</td><td class="px-6 py-3.5 text-right">${(f.cost>0?(f.interest/f.cost*100):0).toFixed(2)}%</td><td class="px-6 py-3.5 text-right text-emerald-400">${w.toFixed(2)}%</td><td class="px-6 py-3.5 text-center space-x-2"><button onclick="openFundModal(${idx})" class="text-blue-400 hover:text-blue-300 text-xs font-medium">Edit</button><button onclick="deleteAsset('funds', ${idx})" class="text-rose-500 hover:text-rose-400 text-xs font-medium">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openFundModal(idx = -1) {
+            document.getElementById('fund-edit-index').value = idx;
+            if(idx >= 0 && systemState.funds[idx]) {
+                const f = systemState.funds[idx];
+                document.getElementById('fund-name').value = f.name || '';
+                document.getElementById('fund-cost').value = f.cost || 0;
+                document.getElementById('fund-interest').value = f.interest || 0;
+                document.getElementById('fund-modal-title').innerText = 'Edit Mutual Fund Account';
+            } else {
+                document.getElementById('fund-name').value = '';
+                document.getElementById('fund-cost').value = '';
+                document.getElementById('fund-interest').value = '';
+                document.getElementById('fund-modal-title').innerText = 'Add Mutual Fund Account';
+            }
+            openModal('fund-modal');
+        }
+
+        function saveFundAsset() {
+            const idx = parseInt(document.getElementById('fund-edit-index').value);
+            const name = document.getElementById('fund-name').value.trim();
+            const cost = parseFloat(document.getElementById('fund-cost').value) || 0;
+            const interest = parseFloat(document.getElementById('fund-interest').value) || 0;
+            if(name) {
+                if(idx >= 0 && idx < systemState.funds.length) {
+                    systemState.funds[idx] = { name, cost, interest };
+                } else {
+                    systemState.funds.push({ name, cost, interest });
+                }
+                closeModal('fund-modal');
+                recomputeAllLedgers();
+            }
+        }
+
+        function renderPensionTable(costSub, valSub, grandTotal) {
+            const tbody = document.getElementById('pension-table-body'); tbody.innerHTML = '';
+            systemState.pensions.forEach((p, idx) => {
+                const w = grandTotal > 0 ? (p.currentValue / grandTotal) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40 text-slate-300";
+                tr.innerHTML = `<td class="px-6 py-3.5">${p.name}</td><td class="px-6 py-3.5 text-right">₦${p.cost.toLocaleString()}</td><td class="px-6 py-3.5 text-right text-emerald-400">+₦${p.interest.toLocaleString()}</td><td class="px-6 py-3.5 text-right font-bold">₦${p.currentValue.toLocaleString()}</td><td class="px-6 py-3.5 text-right">${(p.cost>0?(p.interest/p.cost*100):0).toFixed(2)}%</td><td class="px-6 py-3.5 text-right text-emerald-400">${w.toFixed(2)}%</td><td class="px-6 py-3.5 text-center space-x-2"><button onclick="openPensionModal(${idx})" class="text-blue-400 hover:text-blue-300 text-xs font-medium">Edit</button><button onclick="deleteAsset('pensions', ${idx})" class="text-rose-500 hover:text-rose-400 text-xs font-medium">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openPensionModal(idx = -1) {
+            document.getElementById('pension-edit-index').value = idx;
+            if(idx >= 0 && systemState.pensions[idx]) {
+                const p = systemState.pensions[idx];
+                document.getElementById('pension-name').value = p.name || '';
+                document.getElementById('pension-cost').value = p.cost || 0;
+                document.getElementById('pension-interest').value = p.interest || 0;
+                document.getElementById('pension-modal-title').innerText = 'Edit Pension Allocation (PFA)';
+            } else {
+                document.getElementById('pension-name').value = '';
+                document.getElementById('pension-cost').value = '';
+                document.getElementById('pension-interest').value = '';
+                document.getElementById('pension-modal-title').innerText = 'Link Pension Allocation (PFA)';
+            }
+            openModal('pension-modal');
+        }
+
+        function savePensionAsset() {
+            const idx = parseInt(document.getElementById('pension-edit-index').value);
+            const name = document.getElementById('pension-name').value.trim();
+            const cost = parseFloat(document.getElementById('pension-cost').value) || 0;
+            const interest = parseFloat(document.getElementById('pension-interest').value) || 0;
+            if(name) {
+                if(idx >= 0 && idx < systemState.pensions.length) {
+                    systemState.pensions[idx] = { name, cost, interest };
+                } else {
+                    systemState.pensions.push({ name, cost, interest });
+                }
+                closeModal('pension-modal');
+                recomputeAllLedgers();
+            }
+        }
+
+        function renderUsdTable(costSub, valSub, grandTotal) {
+            const tbody = document.getElementById('usd-table-body'); tbody.innerHTML = '';
+            systemState.usdAssets.forEach((u, idx) => {
+                const w = grandTotal > 0 ? (u.currentValueNGN / grandTotal) * 100 : 0;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40 text-slate-300";
+                tr.innerHTML = `<td class="px-6 py-3.5">${u.name}</td><td class="px-6 py-3.5 text-right">$${u.cost.toLocaleString()}</td><td class="px-6 py-3.5 text-right text-emerald-400">+$${u.interest.toLocaleString()}</td><td class="px-6 py-3.5 text-right">$${u.valUSD.toLocaleString()}</td><td class="px-6 py-3.5 text-right font-bold text-emerald-400">₦${u.currentValueNGN.toLocaleString()}</td><td class="px-6 py-3.5 text-right text-emerald-400">${w.toFixed(2)}%</td><td class="px-6 py-3.5 text-center space-x-2"><button onclick="openUsdModal(${idx})" class="text-blue-400 hover:text-blue-300 text-xs font-medium">Edit</button><button onclick="deleteAsset('usdAssets', ${idx})" class="text-rose-500 hover:text-rose-400 text-xs font-medium">Delete</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openUsdModal(idx = -1) {
+            document.getElementById('usd-edit-index').value = idx;
+            if(idx >= 0 && systemState.usdAssets[idx]) {
+                const u = systemState.usdAssets[idx];
+                document.getElementById('usd-name').value = u.name || '';
+                document.getElementById('usd-cost').value = u.cost || 0;
+                document.getElementById('usd-interest').value = u.interest || 0;
+                document.getElementById('usd-modal-title').innerText = 'Edit Foreign USD Capital Position';
+            } else {
+                document.getElementById('usd-name').value = '';
+                document.getElementById('usd-cost').value = '';
+                document.getElementById('usd-interest').value = '';
+                document.getElementById('usd-modal-title').innerText = 'Add Foreign USD Capital Position';
+            }
+            openModal('usd-modal');
+        }
+
+        function saveUsdAsset() {
+            const idx = parseInt(document.getElementById('usd-edit-index').value);
+            const name = document.getElementById('usd-name').value.trim();
+            const cost = parseFloat(document.getElementById('usd-cost').value) || 0;
+            const interest = parseFloat(document.getElementById('usd-interest').value) || 0;
+            if(name) {
+                if(idx >= 0 && idx < systemState.usdAssets.length) {
+                    systemState.usdAssets[idx] = { name, cost, interest };
+                } else {
+                    systemState.usdAssets.push({ name, cost, interest });
+                }
+                closeModal('usd-modal');
+                recomputeAllLedgers();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           LOANS ENGINE: BATCH REPAYMENT SUPPORT
+        ------------------------------------------------------------- */
+        function formatDateLocal(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function processLoansEngine() {
+            const tbody = document.getElementById('loans-table-body'); tbody.innerHTML = '';
+            let pAgg = 0, iAgg = 0, oAgg = 0;
+
+            systemState.loans.forEach((loan, idx) => {
+                let rPrincipal = parseFloat(loan.amount) || 0, accInt = 0, totalRepaid = 0;
+                
+                const parts = loan.date.split('-');
+                let scanDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                let curDate = new Date();
+                curDate.setHours(0,0,0,0);
+
+                while (scanDate <= curDate) {
+                    accInt += rPrincipal * ((parseFloat(loan.rate) / 100) / 365);
+                    const dateStr = formatDateLocal(scanDate);
+                    (loan.repayments || []).filter(r => r.date === dateStr).forEach(p => {
+                        rPrincipal -= parseFloat(p.amount); 
+                        totalRepaid += parseFloat(p.amount);
+                    });
+                    scanDate.setDate(scanDate.getDate() + 1);
+                }
+                if(rPrincipal < 0) rPrincipal = 0;
+
+                let currentBalance = rPrincipal + accInt;
+                pAgg += loan.amount; iAgg += accInt; oAgg += currentBalance;
+
+                const historyHtml = (loan.repayments && loan.repayments.length > 0)
+                    ? loan.repayments.map((r, rIdx) => `
+                        <span class="inline-flex items-center gap-1 bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-[10px] px-2 py-0.5 rounded-md my-0.5 font-mono">
+                            <span>Batch #${rIdx+1}: ₦${parseFloat(r.amount).toLocaleString()} (${r.date})</span>
+                            <button onclick="deleteLoanRepayment(${idx}, ${rIdx})" class="text-rose-400 hover:text-rose-300 font-bold ml-1 text-xs" title="Remove Batch">&times;</button>
+                        </span>
+                    `).join(' ')
+                    : '<span class="text-slate-600 italic text-[11px]">No batch repayments logged</span>';
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40";
+                tr.innerHTML = `
+                    <td class="px-4 py-3.5"><b>${loan.provider}</b></td>
+                    <td class="px-4 py-3.5 text-right">₦${loan.amount.toLocaleString()}</td>
+                    <td class="px-4 py-3.5 text-center">${loan.date}</td>
+                    <td class="px-4 py-3.5 text-right">${loan.rate}%</td>
+                    <td class="px-4 py-3.5 text-right text-rose-400">₦${accInt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                    <td class="px-4 py-3.5 text-right text-emerald-400">₦${totalRepaid.toLocaleString()}</td>
+                    <td class="px-4 py-3.5 text-right font-bold text-rose-500">₦${currentBalance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+                    <td class="px-4 py-3.5"><div class="flex flex-wrap gap-1 max-w-xs">${historyHtml}</div></td>
+                    <td class="px-4 py-3.5 text-center space-y-1">
+                        <button onclick="launchRepaymentModal('${loan.id}')" class="block w-full bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 px-2 py-1.5 rounded border border-emerald-500/20 text-[11px] font-semibold">+ Pay Tranche</button>
+                        <button onclick="deleteAsset('loans', ${idx})" class="block w-full text-rose-500 hover:text-rose-400 text-[10px] py-0.5">Delete Loan</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('kpi-loan-principal').innerText = `₦${pAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            document.getElementById('kpi-loan-interest').innerText = `₦${iAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+            document.getElementById('kpi-loan-outstanding').innerText = `₦${oAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+        }
+
+        function launchRepaymentModal(loanId) {
+            document.getElementById('repayment-loan-id').value = loanId;
+            document.getElementById('repayment-date').value = new Date().toISOString().split('T')[0];
+            openModal('repayment-modal');
+        }
+
+        function saveLoanRepayment() {
+            const id = document.getElementById('repayment-loan-id').value;
+            const amount = parseFloat(document.getElementById('repayment-amount').value);
+            const date = document.getElementById('repayment-date').value;
+            if(id && !isNaN(amount) && amount > 0 && date) { 
+                const targetLoan = systemState.loans.find(l => l.id === id);
+                if(targetLoan) {
+                    if(!targetLoan.repayments) targetLoan.repayments = [];
+                    targetLoan.repayments.push({ amount, date }); 
+                }
+                closeModal('repayment-modal'); 
+                recomputeAllLedgers(); 
+            }
+        }
+
+        function deleteLoanRepayment(loanIndex, repaymentIndex) {
+            if(confirm("Delete this batch repayment tranche record?")) {
+                systemState.loans[loanIndex].repayments.splice(repaymentIndex, 1);
+                recomputeAllLedgers();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           BUDGET ENGINE: EDIT & DELETE CATEGORIES & EXPENDITURES
+        ------------------------------------------------------------- */
+        function processBudgetEngine() {
+            renderIncomeList();
+            const totalIncome = (systemState.incomes || []).reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
+
+            const tbody = document.getElementById('budget-table-body'); tbody.innerHTML = '';
+            let capAgg = 0, actAgg = 0;
+            systemState.budgets.forEach((b, idx) => {
+                let v = b.cap - b.actual; capAgg += b.cap; actAgg += b.actual;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/30 border-b border-slate-800/40";
+                tr.innerHTML = `
+                    <td class="px-6 py-3.5"><b>${b.name}</b></td>
+                    <td class="px-6 py-3.5 text-right">₦${b.cap.toLocaleString()}</td>
+                    <td class="px-6 py-3.5 text-right text-blue-400">₦${b.actual.toLocaleString()}</td>
+                    <td class="px-6 py-3.5 text-right font-semibold ${v>=0?'text-emerald-400':'text-rose-400'}">₦${v.toLocaleString()}</td>
+                    <td class="px-6 py-3.5 text-center">${v>=0?'<span class="px-2 py-0.5 bg-emerald-950/60 border border-emerald-800 text-emerald-400 rounded-full text-[10px]">Safe</span>':'<span class="px-2 py-0.5 bg-rose-950/60 border border-rose-800 text-rose-400 rounded-full text-[10px]">Alert</span>'}</td>
+                    <td class="px-6 py-3.5 text-center space-x-2">
+                        <button onclick="launchExpenseModal(${idx})" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 px-2.5 py-1 rounded text-[11px]">Log Spending</button>
+                        <button onclick="openBudgetModal(${idx})" class="text-blue-400 hover:text-blue-300 text-xs font-medium">Edit</button>
+                        <button onclick="deleteBudgetCategory(${idx})" class="text-rose-500 hover:text-rose-400 text-xs font-medium">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('kpi-budget-income').innerText = `₦${totalIncome.toLocaleString()}`;
+            document.getElementById('kpi-budget-allocated').innerText = `₦${capAgg.toLocaleString()}`;
+            document.getElementById('kpi-budget-actual').innerText = `₦${actAgg.toLocaleString()}`;
+            document.getElementById('kpi-budget-variance').innerText = `₦${(totalIncome - actAgg).toLocaleString()}`;
+        }
+
+        function renderIncomeList() {
+            const container = document.getElementById('income-list');
+            if(!container) return;
+            if(!systemState.incomes || !systemState.incomes.length) {
+                container.innerHTML = `<p class="text-xs text-slate-600 italic py-1">No income sources yet — add the household's first one below.</p>`;
+                return;
+            }
+            container.innerHTML = systemState.incomes.map(inc => `
+                <div class="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-lg pl-3 pr-2 py-2 text-xs">
+                    <span class="text-slate-200">${inc.name}</span>
+                    <span class="flex items-center gap-3">
+                        <span class="text-emerald-400 font-semibold">₦${(parseFloat(inc.amount)||0).toLocaleString()}</span>
+                        <button onclick="removeIncomeSource('${inc.id}')" class="text-rose-400 font-bold hover:text-rose-300">&times;</button>
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function addIncomeSource() {
+            const nameField = document.getElementById('new-income-name');
+            const amountField = document.getElementById('new-income-amount');
+            const name = nameField.value.trim();
+            const amount = parseFloat(amountField.value);
+            if(name && !isNaN(amount) && amount >= 0) {
+                systemState.incomes.push({ id: 'INC-' + Math.floor(Math.random()*90000), name, amount });
+                nameField.value = ''; amountField.value = '';
+                recomputeAllLedgers();
+            }
+        }
+
+        function removeIncomeSource(id) {
+            systemState.incomes = systemState.incomes.filter(i => i.id !== id);
+            recomputeAllLedgers();
+        }
+
+        function launchExpenseModal(idx) {
+            document.getElementById('expense-category-index').value = idx;
+            document.getElementById('expense-amount').value = '';
+            openModal('expense-modal');
+        }
+
+        function openBudgetModal(idx = -1) {
+            document.getElementById('budget-edit-index').value = idx;
+            if(idx >= 0 && systemState.budgets[idx]) {
+                const b = systemState.budgets[idx];
+                document.getElementById('edit-budget-name').value = b.name || '';
+                document.getElementById('edit-budget-cap').value = b.cap || 0;
+                document.getElementById('edit-budget-actual').value = b.actual || 0;
+            }
+            openModal('budget-category-modal');
+        }
+
+        function saveBudgetCategoryModal() {
+            const idx = parseInt(document.getElementById('budget-edit-index').value);
+            const name = document.getElementById('edit-budget-name').value.trim();
+            const cap = parseFloat(document.getElementById('edit-budget-cap').value) || 0;
+            const actual = parseFloat(document.getElementById('edit-budget-actual').value) || 0;
+            if(name && idx >= 0 && idx < systemState.budgets.length) {
+                systemState.budgets[idx] = { name, cap, actual };
+                closeModal('budget-category-modal');
+                recomputeAllLedgers();
+            }
+        }
+
+        function deleteBudgetCategory(idx) {
+            if(confirm("Delete this budget category envelope?")) {
+                systemState.budgets.splice(idx, 1);
+                recomputeAllLedgers();
+            }
+        }
+
+        function addBudgetCategory() {
+            const name = document.getElementById('new-budget-name').value.trim();
+            const cap = parseFloat(document.getElementById('new-budget-cap').value);
+            if(name && !isNaN(cap)) { 
+                systemState.budgets.push({ name, cap, actual: 0 }); 
+                document.getElementById('new-budget-name').value = '';
+                document.getElementById('new-budget-cap').value = '';
+                recomputeAllLedgers(); 
+            }
+        }
+
+        function saveBudgetExpense() {
+            const idx = document.getElementById('expense-category-index').value;
+            const amt = parseFloat(document.getElementById('expense-amount').value);
+            if(!isNaN(amt) && systemState.budgets[idx]) { 
+                systemState.budgets[idx].actual += amt; 
+                closeModal('expense-modal'); 
+                recomputeAllLedgers(); 
+            }
+        }
+
+        /* -------------------------------------------------------------
+           STOCKS MODAL & BROKER MANAGERS
+        ------------------------------------------------------------- */
+        function openStockModal(ticker = null) {
+            const existing = ticker ? systemState.stocks.find(s => s.ticker === ticker) : null;
+            document.getElementById('stock-ticker').value = existing ? existing.ticker : '';
+            document.getElementById('stock-ticker').disabled = !!existing;
+            document.getElementById('stock-manual-price').value = (existing && existing.priceSource === 'manual') ? existing.livePrice : '';
+            buildStockBrokerFields(existing);
+            openModal('stock-modal');
+        }
+
+        function buildStockBrokerFields(existing) {
+            const container = document.getElementById('stock-broker-fields');
+            container.innerHTML = systemState.brokers.map((b, i) => {
+                const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
+                const h = existing?.holdings?.[b] || { cost: 0, units: 0 };
+                return `<div class="grid grid-cols-2 gap-4"><div><label class="block text-xs ${palette.text}">${b} Cost (₦)</label><input type="number" data-broker="${b}" data-field="cost" class="stock-broker-input w-full bg-[#0B0F13] border border-slate-800 rounded px-3 py-2 text-white" value="${h.cost || ''}"></div><div><label class="block text-xs ${palette.text}">${b} Units</label><input type="number" data-broker="${b}" data-field="units" class="stock-broker-input w-full bg-[#0B0F13] border border-slate-800 rounded px-3 py-2 text-white" value="${h.units || ''}"></div></div>`;
+            }).join('');
+        }
+
+        function saveStockAsset() {
+            const ticker = document.getElementById('stock-ticker').value.toUpperCase().trim();
+            if(!ticker) return;
+            const holdings = {};
+            systemState.brokers.forEach(b => holdings[b] = { cost: 0, units: 0 });
+            document.querySelectorAll('.stock-broker-input').forEach(input => {
+                holdings[input.dataset.broker][input.dataset.field] = parseFloat(input.value) || 0;
+            });
+            const manualPriceRaw = document.getElementById('stock-manual-price').value;
+            const hasManualPrice = manualPriceRaw !== '' && !isNaN(parseFloat(manualPriceRaw));
+
+            let existing = systemState.stocks.find(s => s.ticker === ticker);
+            if(existing) {
+                existing.holdings = holdings;
+                if(hasManualPrice) { existing.livePrice = parseFloat(manualPriceRaw); existing.priceSource = 'manual'; }
+            } else {
+                systemState.stocks.push({
+                    ticker, holdings,
+                    livePrice: hasManualPrice ? parseFloat(manualPriceRaw) : 0,
+                    priceSource: hasManualPrice ? 'manual' : 'pending',
+                    lastSynced: null
+                });
+            }
+            closeModal('stock-modal');
+            recomputeAllLedgers();
+
+            if(!hasManualPrice) {
+                syncStockPrice(ticker).then(() => recomputeAllLedgers());
+            }
+        }
+
+        function openBrokerModal() { renderBrokerList(); openModal('broker-modal'); }
+        function renderBrokerList() {
+            document.getElementById('broker-list').innerHTML = systemState.brokers.map(b => `
+                <span class="bg-slate-900 border border-slate-800 rounded-full pl-3 pr-2 py-1 text-xs flex items-center gap-2 text-slate-200">${b}<button onclick="removeBroker('${b}')" class="text-rose-400 font-bold">&times;</button></span>
+            `).join('');
+        }
+
+        function addBroker() {
+            const name = document.getElementById('new-broker-name').value.trim();
+            if(name && !systemState.brokers.includes(name)) {
+                systemState.brokers.push(name);
+                systemState.stocks.forEach(s => s.holdings[name] = { cost: 0, units: 0 });
+                document.getElementById('new-broker-name').value = '';
+                renderBrokerList(); recomputeAllLedgers();
+            }
+        }
+
+        function removeBroker(name) {
+            if(systemState.brokers.length > 1 && confirm(`Remove ${name}?`)) {
+                systemState.brokers = systemState.brokers.filter(b => b !== name);
+                systemState.stocks.forEach(s => delete s.holdings[name]);
+                renderBrokerList(); recomputeAllLedgers();
+            }
+        }
+
+        function saveNewLoan() {
+            const provider = document.getElementById('loan-provider').value;
+            const amount = parseFloat(document.getElementById('loan-amount').value) || 0;
+            const date = document.getElementById('loan-date').value;
+            const rate = parseFloat(document.getElementById('loan-rate').value) || 0;
+            if(provider && amount && date) { 
+                systemState.loans.push({ id: 'L-'+Math.floor(Math.random()*9000), provider, amount, date, rate, repayments: [] }); 
+                closeModal('loan-modal'); 
+                recomputeAllLedgers(); 
+            }
+        }
+
+        function deleteAsset(type, idx) {
+            if(confirm("Delete this entry?")) { 
+                systemState[type].splice(idx, 1); 
+                recomputeAllLedgers(); 
+            }
+        }
+
+        function triggerChartRebuilds(stocksVal=0, fundsVal=0, pensionVal=0, usdVal=0) {
+            const allocCtx = document.getElementById('assetAllocationChart');
+            if (allocCtx) {
+                if(allocationChartInstance) allocationChartInstance.destroy();
+                allocationChartInstance = new Chart(allocCtx, {
+                    type: 'doughnut', data: {
+                        labels: ['Stocks', 'Mutual Funds', 'Pension', 'USD Foreign Assets'],
+                        datasets: [{ data: [stocksVal, fundsVal, pensionVal, usdVal], backgroundColor: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { size: 10 } } } } }
+                });
+            }
+
+            const perfCtx = document.getElementById('assetPerformanceChart');
+            if (perfCtx) {
+                if(performanceChartInstance) performanceChartInstance.destroy();
+                let labels = systemState.stocks.map(s => s.ticker);
+                let dataValues = systemState.stocks.map(s => s.netReturn);
+                performanceChartInstance = new Chart(perfCtx, {
+                    type: 'bar', data: {
+                        labels: labels, datasets: [{ label: 'Yield (₦)', data: dataValues, backgroundColor: dataValues.map(v => v >= 0 ? '#10B981' : '#EF4444'), borderRadius: 6 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
