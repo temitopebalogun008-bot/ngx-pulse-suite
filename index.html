@@ -60,7 +60,20 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){handleAuthSubmit();}">
+                    <div class="relative flex items-center">
+                        <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-[#0B0F13] border border-slate-800 rounded-xl px-4 py-3 pr-10 text-sm text-white focus:outline-none focus:border-emerald-500 transition" onkeydown="if(event.key==='Enter'){handleAuthSubmit();}">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 text-slate-500 hover:text-emerald-400 transition focus:outline-none">
+                            <!-- Eye Closed Icon -->
+                            <svg id="eye-icon-closed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                            </svg>
+                            <!-- Eye Open Icon (Hidden by default) -->
+                            <svg id="eye-icon-open" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -684,9 +697,11 @@
             supabase.auth.onAuthStateChange(async (event, session) => {
                 const authScreen = document.getElementById('auth-screen');
                 const appDashboard = document.getElementById('app-dashboard');
-                const errorEl = document.getElementById('auth-error');
                 
-                errorEl.classList.add('hidden'); // Clear errors on state change
+                // Do NOT clear success messages immediately if the event is INITIAL_SESSION
+                if (event === 'SIGNED_OUT') {
+                    document.getElementById('auth-error').classList.add('hidden'); 
+                }
 
                 if (session?.user) {
                     // --- USER IS LOGGED IN ---
@@ -754,6 +769,23 @@
         }
 
         // 4. AUTH HANDLERS
+        
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('auth-password');
+            const eyeClosed = document.getElementById('eye-icon-closed');
+            const eyeOpen = document.getElementById('eye-icon-open');
+            
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeClosed.classList.add('hidden');
+                eyeOpen.classList.remove('hidden');
+            } else {
+                pwdInput.type = 'password';
+                eyeClosed.classList.remove('hidden');
+                eyeOpen.classList.add('hidden');
+            }
+        }
+
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
             document.getElementById('auth-title').innerText = isSignUpMode ? 'Create a new account' : 'Sign in to access your ledger';
@@ -762,16 +794,27 @@
             document.getElementById('auth-error').classList.add('hidden');
         }
 
+        function showAuthMessage(msg, isSuccess = false) {
+            const errorEl = document.getElementById('auth-error');
+            errorEl.innerText = msg;
+            errorEl.classList.remove('hidden');
+            
+            if (isSuccess) {
+                errorEl.className = "text-xs p-3 rounded-lg text-center text-emerald-400 bg-emerald-500/10 border border-emerald-500/20";
+            } else {
+                errorEl.className = "text-xs p-3 rounded-lg text-center text-rose-400 bg-rose-500/10 border border-rose-500/20";
+            }
+        }
+
         async function handleAuthSubmit() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
-            const errorEl = document.getElementById('auth-error');
             const submitBtn = document.getElementById('auth-submit-btn');
-            errorEl.classList.add('hidden');
+            
+            document.getElementById('auth-error').classList.add('hidden');
 
             if(!email || !password) {
-                errorEl.innerText = "Please enter both email and password.";
-                errorEl.classList.remove('hidden');
+                showAuthMessage("Please enter both email and password.", false);
                 return;
             }
 
@@ -779,22 +822,40 @@
             const originalBtnText = submitBtn.innerText;
             submitBtn.innerText = 'Processing...';
             submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
 
-            let result;
-            if (isSignUpMode) {
-                result = await supabase.auth.signUp({ email, password });
-            } else {
-                result = await supabase.auth.signInWithPassword({ email, password });
+            try {
+                let result;
+                if (isSignUpMode) {
+                    result = await supabase.auth.signUp({ email, password });
+                } else {
+                    result = await supabase.auth.signInWithPassword({ email, password });
+                }
+
+                // Reset button visual state
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+
+                if (result.error) {
+                    showAuthMessage(result.error.message, false);
+                } else if (isSignUpMode && result.data && !result.data.session) {
+                    // Supabase requires email verification (Default setting)
+                    showAuthMessage("Success! Please check your email inbox to verify your account before logging in.", true);
+                    
+                    // Automatically toggle back to login mode so they can sign in after verifying
+                    setTimeout(() => {
+                        if(isSignUpMode) toggleAuthMode();
+                        document.getElementById('auth-email').value = email;
+                        document.getElementById('auth-password').value = '';
+                    }, 1500);
+                }
+            } catch (err) {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                showAuthMessage("An unexpected system error occurred. Please try again.", false);
             }
-
-            submitBtn.innerText = originalBtnText;
-            submitBtn.disabled = false;
-
-            if (result.error) {
-                errorEl.innerText = result.error.message;
-                errorEl.classList.remove('hidden');
-            }
-            // On success, the onAuthStateChange listener automatically handles UI swapping
         }
 
         async function handleSignOut() {
