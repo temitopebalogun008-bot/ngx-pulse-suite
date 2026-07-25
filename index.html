@@ -88,8 +88,6 @@
     <!-- MAIN DASHBOARD APP -->
     <!-- ========================================== -->
     <div id="app-dashboard" class="hidden min-h-screen flex-col animate-fade-in">
-        
-        <!-- Glassmorphism Navigation Bar -->
         <header class="border-b border-slate-800/80 bg-[#0F141C]/80 backdrop-blur-xl sticky top-0 z-40 px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4 md:gap-6 shadow-sm">
             <div class="flex items-center space-x-3">
                 <div class="bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20 shadow-inner">
@@ -101,7 +99,6 @@
                 </div>
             </div>
 
-            <!-- Tab System -->
             <nav class="flex bg-[#0B0F13]/80 p-1.5 rounded-xl border border-slate-800/80 space-x-1 backdrop-blur-md">
                 <button onclick="switchTab('portfolio')" id="tab-portfolio" class="px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.003 9.003 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
@@ -150,12 +147,10 @@
             <!-- VIEW 1: PORTFOLIO LEDGER -->
             <!-- ========================================== -->
             <div id="view-portfolio" class="space-y-6 animate-fade-in">
-                <!-- Ticker -->
                 <div class="p-[1.5px] rounded-xl bg-gradient-to-r from-emerald-400/80 via-blue-500/80 to-indigo-500/80 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
                     <div id="ticker-tape-container" class="bg-[#0F141C]/95 backdrop-blur-md rounded-xl p-2.5 overflow-hidden min-h-[46px]"></div>
                 </div>
                 
-                <!-- KPI Blocks -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5">
                     <div class="bg-gradient-to-br from-[#131A22] to-[#0F141C] p-6 rounded-xl border border-slate-800/80 shadow-lg hover:border-slate-700 transition duration-300">
                         <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Total Value</p>
@@ -175,7 +170,6 @@
                     </div>
                 </div>
 
-                <!-- Charts -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-[#0F141C] p-6 rounded-xl border border-slate-800 lg:col-span-1 flex flex-col justify-between shadow-lg min-h-[340px]">
                         <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">Asset Allocation</h3>
@@ -191,7 +185,7 @@
                     </div>
                 </div>
 
-                <!-- 1. STOCKS LEDGER -->
+                <!-- STOCKS LEDGER -->
                 <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-lg hover:border-slate-700 transition-colors">
                     <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2 backdrop-blur-sm">
                         <div>
@@ -211,7 +205,7 @@
                     </div>
                 </div>
 
-                <!-- 2. MUTUAL FUNDS -->
+                <!-- MUTUAL FUNDS -->
                 <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-lg hover:border-slate-700 transition-colors">
                     <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2 backdrop-blur-sm">
                         <div>
@@ -238,7 +232,7 @@
                     </div>
                 </div>
 
-                <!-- 3. PENSION -->
+                <!-- PENSION -->
                 <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-lg hover:border-slate-700 transition-colors">
                     <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2 backdrop-blur-sm">
                         <div>
@@ -264,7 +258,7 @@
                     </div>
                 </div>
 
-                <!-- 4. USD ASSETS -->
+                <!-- USD ASSETS -->
                 <div class="bg-[#0F141C] rounded-xl border border-slate-800 overflow-hidden shadow-lg hover:border-slate-700 transition-colors">
                     <div class="px-6 py-4 bg-slate-900/60 border-b border-slate-800 flex justify-between items-center flex-wrap gap-2 backdrop-blur-sm">
                         <div>
@@ -410,7 +404,6 @@
                             <div class="flex items-center gap-2">
                                 <select id="budget-period-selector" onchange="window.switchBudgetPeriod(this.value)" class="bg-[#0B0F13] border border-slate-700 text-slate-300 text-[11px] uppercase tracking-wider font-semibold rounded-lg px-3 py-2.5 focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm">
                                     <option value="live">Current Period (Live)</option>
-                                    <!-- History options injected via JS -->
                                 </select>
                                 <button id="btn-archive-budget" onclick="window.openArchiveModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-[10px] uppercase tracking-wider px-4 py-2.5 rounded-lg transition shadow-sm">Archive & Reset</button>
                                 <button id="btn-delete-archive" onclick="window.deleteCurrentArchive()" class="hidden bg-rose-600/10 text-rose-400 hover:bg-rose-600/30 border border-rose-500/20 font-semibold text-[10px] uppercase tracking-wider px-4 py-2.5 rounded-lg transition shadow-sm">Delete Archive</button>
@@ -446,7 +439,7 @@
     <!-- INTERACTIVE MODAL OVERLAYS (DASHBOARD ONLY)-->
     <!-- ========================================== -->
 
-    <!-- ARCHIVE BUDGET MODAL -->
+    <!-- CUSTOM CALENDAR ARCHIVE MODAL -->
     <div id="archive-budget-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl animate-slide-up">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
@@ -454,17 +447,33 @@
                 <button onclick="closeModal('archive-budget-modal')" class="text-slate-400 hover:text-white transition bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
             </div>
             <div class="p-6 space-y-5">
-                <p class="text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-4 rounded-lg border border-slate-800">Select the month and year you want to save this snapshot as. Your current spending will be reset to ₦0, but your allocated envelope caps will remain for the new month.</p>
-                <div>
-                    <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Select Month</label>
-                    <input type="month" id="archive-month-picker" class="w-full bg-[#0B0F13] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                <p class="text-xs text-slate-400 leading-relaxed bg-slate-900/50 p-4 rounded-lg border border-slate-800">Select the period to save this snapshot as. Your current spending will be reset to ₦0, but your allocated caps and income sources will remain for the new month.</p>
+                
+                <div class="bg-[#0B0F13] border border-slate-700 rounded-lg p-4">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                        <button onclick="window.changeArchiveYear(-1)" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                        <span id="archive-year-display" class="text-white font-bold text-sm tracking-wider"></span>
+                        <button onclick="window.changeArchiveYear(1)" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2" id="archive-month-grid"></div>
                 </div>
+
                 <button onclick="window.confirmArchiveMonth()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3 rounded-lg shadow-sm transition mt-2">Save & Reset Spending</button>
             </div>
         </div>
     </div>
+
+    <!-- BUDGET HISTORY MODAL -->
+    <div id="budget-history-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity">
+        <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-slide-up">
+            <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
+                <h3 class="font-bold text-white text-sm uppercase tracking-wider">Historical Archives</h3>
+                <button onclick="closeModal('budget-history-modal')" class="text-slate-400 hover:text-white transition bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 overflow-y-auto" id="budget-history-container"></div>
+        </div>
+    </div>
     
-    <!-- (Other Modals) -->
     <div id="stock-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity">
         <div class="bg-[#0F141C] border border-slate-800 rounded-xl w-full max-w-md overflow-hidden shadow-2xl max-h-[90vh] flex flex-col animate-slide-up">
             <div class="px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center flex-shrink-0">
@@ -668,1103 +677,10 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- SYSTEMS CONTROLLER / ARCHITECTURE ENGINES  -->
-    <!-- ========================================== -->
-    <script>
-        try {
-            // SUPABASE CONFIGURATION
-            const SUPABASE_URL = 'https://smcnvmylvgwuiohqaiaw.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtY252bXlsdmd3dWlvaHFhaWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MDg2NDIsImV4cCI6MjEwMDI4NDY0Mn0.hBTOo1d86EMf7PUysqpdEBAYIMz2VoQCN0WQb7Yw1CI';
-            window.supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-        } catch (error) {
-            console.error("Supabase failed to initialize:", error);
-        }
-
-        let currentUser = null;
-        let isSignUpMode = false;
-        let currentBudgetViewId = 'live';
-
-        const BROKER_COLOR_PALETTE = [
-            { bg: 'bg-blue-950/20',   head: 'bg-blue-950/30',   text: 'text-blue-300',   value: 'text-blue-400' },
-            { bg: 'bg-purple-950/20', head: 'bg-purple-950/30', text: 'text-purple-300', value: 'text-purple-400' },
-            { bg: 'bg-amber-950/20',  head: 'bg-amber-950/30',  text: 'text-amber-300',  value: 'text-amber-400' }
-        ];
-
-        const NGX_PULSE_STOCKS_ENDPOINT = '/.netlify/functions/prices';
-
-        let systemState = {
-            usdToNgnRate: 1510.50,
-            usdRateManualOverride: false,
-            brokers: ['Trove', 'Wealth'],
-            stocks: [],
-            funds: [],
-            pensions: [],
-            usdAssets: [],
-            loans: [],
-            incomes: [],
-            budgets: [],
-            budgetHistory: []
-        };
-
-        let allocationChartInstance = null;
-        let performanceChartInstance = null;
-        let lastRenderedTickersStr = '';
-
-        // Global UX Toast System
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let colorClass = type === 'success' ? 'border-emerald-500 bg-emerald-950/90 text-emerald-100' : 'border-rose-500 bg-rose-950/90 text-rose-100';
-            let icon = type === 'success' 
-                ? `<svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
-                : `<svg class="w-5 h-5 text-rose-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
-
-            toast.className = `flex items-center gap-3 border-l-4 px-4 py-3 rounded-lg shadow-xl backdrop-blur-md animate-toast ${colorClass}`;
-            toast.innerHTML = `${icon} <span class="text-sm font-medium tracking-wide">${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(20px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        };
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            if (!window.supabaseClient) {
-                window.showToast("Cloud DB disconnected. Check adblockers.", "error");
-                return;
-            }
-
-            window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                const authScreen = document.getElementById('auth-screen');
-                const appDashboard = document.getElementById('app-dashboard');
-                
-                if (event === 'SIGNED_OUT') {
-                    document.getElementById('auth-error').classList.add('hidden'); 
-                }
-
-                if (session?.user) {
-                    currentUser = session.user;
-                    authScreen.classList.add('hidden');
-                    authScreen.classList.remove('flex');
-                    appDashboard.classList.remove('hidden');
-                    appDashboard.classList.add('flex'); 
-                    
-                    document.getElementById('user-email-display').innerText = currentUser.email;
-                    await loadPortfolioFromCloud();
-                } else {
-                    currentUser = null;
-                    authScreen.classList.remove('hidden');
-                    authScreen.classList.add('flex');
-                    appDashboard.classList.add('hidden');
-                    appDashboard.classList.remove('flex');
-                    
-                    document.getElementById('auth-email').value = '';
-                    document.getElementById('auth-password').value = '';
-                }
-            });
-        });
-
-        async function loadPortfolioFromCloud() {
-            if (!currentUser || !window.supabaseClient) return;
-            const { data, error } = await window.supabaseClient
-                .from('portfolios')
-                .select('state')
-                .eq('user_id', currentUser.id)
-                .single();
-
-            if (data && data.state) {
-                systemState = data.state;
-                migrateLegacyState();
-                refreshAllData();
-                window.showToast("Cloud ledger synced securely.");
-            } else if (error && error.code === 'PGRST116') {
-                systemState = { usdToNgnRate: 1510.50, usdRateManualOverride: false, brokers: ['Trove', 'Wealth'], stocks: [], funds: [], pensions: [], usdAssets: [], loans: [], incomes: [], budgets: [], budgetHistory: [] };
-                migrateLegacyState();
-                await persistState();
-                refreshAllData();
-            }
-        }
-
-        async function persistState() {
-            if (currentUser && window.supabaseClient) {
-                await window.supabaseClient.from('portfolios').upsert({
-                    user_id: currentUser.id,
-                    state: systemState,
-                    updated_at: new Date().toISOString()
-                });
-            }
-        }
-
-        window.togglePasswordVisibility = function() {
-            const pwdInput = document.getElementById('auth-password');
-            const eyeClosed = document.getElementById('eye-icon-closed');
-            const eyeOpen = document.getElementById('eye-icon-open');
-            
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                eyeClosed.classList.add('hidden');
-                eyeOpen.classList.remove('hidden');
-            } else {
-                pwdInput.type = 'password';
-                eyeClosed.classList.remove('hidden');
-                eyeOpen.classList.add('hidden');
-            }
-        };
-
-        window.toggleAuthMode = function() {
-            isSignUpMode = !isSignUpMode;
-            document.getElementById('auth-title').innerText = isSignUpMode ? 'Create a new account' : 'Sign in to access your ledger';
-            document.getElementById('auth-submit-btn').innerText = isSignUpMode ? 'Create Account' : 'Sign In';
-            document.getElementById('auth-toggle-btn').innerText = isSignUpMode ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
-            document.getElementById('auth-error').classList.add('hidden');
-        };
-
-        window.showAuthMessage = function(msg, isSuccess = false) {
-            const errorEl = document.getElementById('auth-error');
-            errorEl.innerText = msg;
-            errorEl.classList.remove('hidden');
-            
-            if (isSuccess) {
-                errorEl.className = "text-xs p-3 rounded-lg text-center text-emerald-400 bg-emerald-500/10 border border-emerald-500/20";
-            } else {
-                errorEl.className = "text-xs p-3 rounded-lg text-center text-rose-400 bg-rose-500/10 border border-rose-500/20";
-            }
-        };
-
-        window.handleAuthSubmit = async function() {
-            if (!window.supabaseClient) {
-                window.showAuthMessage("Supabase client not loaded. Check network.", false);
-                return;
-            }
-
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value;
-            const submitBtn = document.getElementById('auth-submit-btn');
-            
-            document.getElementById('auth-error').classList.add('hidden');
-
-            if(!email || !password) {
-                window.showAuthMessage("Please enter both email and password.", false);
-                return;
-            }
-
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...`;
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
-
-            try {
-                let result;
-                if (isSignUpMode) {
-                    result = await window.supabaseClient.auth.signUp({ email, password });
-                } else {
-                    result = await window.supabaseClient.auth.signInWithPassword({ email, password });
-                }
-
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
-
-                if (result.error) {
-                    window.showAuthMessage(result.error.message, false);
-                } else if (isSignUpMode && result.data && !result.data.session) {
-                    window.showAuthMessage("Success! Please check your email inbox to verify your account.", true);
-                    
-                    setTimeout(() => {
-                        if(isSignUpMode) window.toggleAuthMode();
-                        document.getElementById('auth-email').value = email;
-                        document.getElementById('auth-password').value = '';
-                    }, 2000);
-                }
-            } catch (err) {
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
-                window.showAuthMessage("An unexpected system error occurred.", false);
-            }
-        };
-
-        function handleSignOut() {
-            if (window.supabaseClient) window.supabaseClient.auth.signOut();
-        }
-
-        function migrateLegacyState() {
-            if(!systemState.budgetHistory) systemState.budgetHistory = [];
-            if(!systemState.incomes) systemState.incomes = [];
-            if(!systemState.brokers) systemState.brokers = ['Trove', 'Wealth'];
-            if(!systemState.stocks) systemState.stocks = [];
-            systemState.stocks.forEach(s => {
-                if(!s.holdings) {
-                    s.holdings = {
-                        Trove: { cost: s.troveCost || 0, units: s.troveUnits || 0 },
-                        Wealth: { cost: s.wealthCost || 0, units: s.wealthUnits || 0 }
-                    };
-                }
-                systemState.brokers.forEach(b => {
-                    if(!s.holdings[b]) s.holdings[b] = { cost: 0, units: 0 };
-                });
-            });
-        }
-
-        function switchTab(targetTab) {
-            ['portfolio', 'loans', 'budgeting'].forEach(tab => {
-                document.getElementById(`view-${tab}`).classList.add('hidden');
-                document.getElementById(`tab-${tab}`).className = "px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-2 hover:bg-slate-800/50";
-            });
-            document.getElementById(`view-${targetTab}`).classList.remove('hidden');
-            document.getElementById(`tab-${targetTab}`).className = "px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2";
-            if(targetTab === 'portfolio') recomputeAllLedgers();
-        }
-
-        function openModal(id) { 
-            const m = document.getElementById(id);
-            m.classList.remove('hidden'); m.classList.add('flex'); 
-        }
-        function closeModal(id) { 
-            const m = document.getElementById(id);
-            m.classList.add('hidden'); m.classList.remove('flex'); 
-        }
-
-        async function refreshAllData() {
-            const syncIcon = document.getElementById('sync-icon');
-            if(syncIcon) syncIcon.classList.add('animate-spin');
-            
-            await fetchOfficialUsdRate();
-            await syncAllStockPrices();
-            
-            if(syncIcon) syncIcon.classList.remove('animate-spin');
-            window.showToast('Market data & rates synchronized.');
-        }
-
-        async function fetchOfficialUsdRate() {
-            if(systemState.usdRateManualOverride) return;
-            try {
-                const res = await fetch('https://open.er-api.com/v6/latest/USD');
-                const data = await res.json();
-                if(data?.rates?.NGN) systemState.usdToNgnRate = parseFloat(data.rates.NGN);
-            } catch(err) { console.warn("Rate fetch failed", err); }
-            document.getElementById('usd-rate-input').value = systemState.usdToNgnRate.toFixed(2);
-        }
-
-        function updateUsdRateManually(value) {
-            const parsed = parseFloat(value);
-            if(!isNaN(parsed) && parsed > 0) {
-                systemState.usdToNgnRate = parsed;
-                systemState.usdRateManualOverride = true;
-                document.getElementById('usd-rate-dot').className = "w-2 h-2 rounded-full bg-amber-500";
-                recomputeAllLedgers();
-                window.showToast("Manual USD rate applied.");
-            }
-        }
-
-        async function resetUsdRateToLive() {
-            systemState.usdRateManualOverride = false;
-            document.getElementById('usd-rate-dot').className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
-            await fetchOfficialUsdRate();
-            recomputeAllLedgers();
-            window.showToast("Reverted to live USD rate.");
-        }
-
-        async function fetchNgxPulseStocks() {
-            const res = await fetch(NGX_PULSE_STOCKS_ENDPOINT);
-            if(!res.ok) throw new Error(`HTTP ${res.status}`);
-            const payload = await res.json();
-            return Array.isArray(payload) ? payload : (payload.data || payload.stocks || []);
-        }
-
-        async function syncStockPrice(ticker) {
-            const stock = systemState.stocks.find(s => s.ticker === ticker);
-            if(!stock) return false;
-            try {
-                const records = await fetchNgxPulseStocks();
-                const record = records.find(r => String(r.symbol || r.ticker || '').toUpperCase() === ticker.toUpperCase());
-                const price = parseFloat(record?.current_price ?? record?.price ?? record?.close ?? record?.livePrice);
-                if(isNaN(price) || price <= 0) throw new Error();
-                stock.livePrice = price;
-                stock.priceSource = 'live';
-                stock.lastSynced = new Date().toISOString();
-                return true;
-            } catch(err) {
-                stock.priceSource = stock.priceSource === 'live' ? 'stale' : 'manual';
-                return false;
-            }
-        }
-
-        async function syncAllStockPrices() {
-            const badge = document.getElementById('stock-sync-badge');
-            if(badge) badge.innerText = 'Syncing…';
-            try {
-                const records = await fetchNgxPulseStocks();
-                systemState.stocks.forEach(s => {
-                    const record = records.find(r => String(r.symbol || r.ticker || '').toUpperCase() === s.ticker.toUpperCase());
-                    const price = parseFloat(record?.current_price ?? record?.price ?? record?.close ?? record?.livePrice);
-                    if(record && !isNaN(price) && price > 0) {
-                        s.livePrice = price;
-                        s.priceSource = 'live';
-                        s.lastSynced = new Date().toISOString();
-                    } else {
-                        s.priceSource = s.priceSource === 'live' ? 'stale' : 'manual';
-                    }
-                });
-                if(badge) badge.innerText = `Live`;
-            } catch(err) {
-                systemState.stocks.forEach(s => { s.priceSource = s.priceSource === 'live' ? 'stale' : 'manual'; });
-                if(badge) badge.innerText = 'Cached';
-            }
-            recomputeAllLedgers();
-        }
-
-        function renderTickerTape() {
-            const container = document.getElementById('ticker-tape-container');
-            if(!container) return;
-
-            const currentTickersStr = systemState.stocks.map(s => s.ticker).sort().join(',');
-            if (currentTickersStr === lastRenderedTickersStr) return; 
-            lastRenderedTickersStr = currentTickersStr;
-
-            container.innerHTML = '';
-
-            const symbolsMatrix = [ { "proName": "FX_IDC:USDNGN", "title": "USD/NGN Spot" } ];
-            systemState.stocks.forEach(s => { symbolsMatrix.push({ "proName": `NSENG:${s.ticker}`, "title": s.ticker }); });
-            symbolsMatrix.push( { "proName": "FOREXCOM:SPX500", "title": "S&P 500 Index" }, { "proName": "BINANCE:BTCUSDT", "title": "Bitcoin" } );
-
-            const widgetWrapper = document.createElement('div');
-            widgetWrapper.className = 'tradingview-widget-container';
-            const widgetSub = document.createElement('div');
-            widgetSub.className = 'tradingview-widget-container__widget';
-            widgetWrapper.appendChild(widgetSub);
-
-            const scriptEl = document.createElement('script');
-            scriptEl.type = 'text/javascript';
-            scriptEl.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
-            scriptEl.async = true;
-            scriptEl.text = JSON.stringify({
-                "symbols": symbolsMatrix, "showSymbolLogo": true, "colorTheme": "dark", "isTransparent": true, "displayMode": "adaptive", "locale": "en"
-            });
-
-            widgetWrapper.appendChild(scriptEl);
-            container.appendChild(widgetWrapper);
-        }
-
-        function getEmptyRowHtml(colSpan, typeName) {
-            return `<tr><td colspan="${colSpan}" class="px-4 py-10 text-center bg-slate-900/20"><p class="text-slate-500 text-xs italic">No ${typeName} logged yet. Add your first entry above.</p></td></tr>`;
-        }
-
-        function recomputeAllLedgers() {
-            let stocksCostSubtotal = 0, stocksValueSubtotal = 0;
-            systemState.stocks.forEach(s => {
-                const holdingValues = Object.values(s.holdings || {});
-                s.totalUnits = holdingValues.reduce((sum, h) => sum + (parseFloat(h.units) || 0), 0);
-                s.totalCost = holdingValues.reduce((sum, h) => sum + ((parseFloat(h.cost) || 0) * (parseFloat(h.units) || 0)), 0);
-                s.currentValue = s.totalUnits * (parseFloat(s.livePrice) || 0);
-                s.netReturn = s.currentValue - s.totalCost;
-                stocksCostSubtotal += s.totalCost;
-                stocksValueSubtotal += s.currentValue;
-            });
-
-            let fundsCostSubtotal = 0, fundsValueSubtotal = 0;
-            systemState.funds.forEach(f => {
-                f.currentValue = (parseFloat(f.cost) || 0) + (parseFloat(f.interest) || 0);
-                fundsCostSubtotal += (parseFloat(f.cost) || 0);
-                fundsValueSubtotal += f.currentValue;
-            });
-
-            let pensionCostSubtotal = 0, pensionValueSubtotal = 0;
-            systemState.pensions.forEach(p => {
-                p.currentValue = (parseFloat(p.cost) || 0) + (parseFloat(p.interest) || 0);
-                pensionCostSubtotal += (parseFloat(p.cost) || 0);
-                pensionValueSubtotal += p.currentValue;
-            });
-
-            let usdCostSubtotalNGN = 0, usdValueSubtotalNGN = 0;
-            systemState.usdAssets.forEach(u => {
-                u.valUSD = (parseFloat(u.cost) || 0) + (parseFloat(u.interest) || 0);
-                u.currentValueNGN = u.valUSD * systemState.usdToNgnRate;
-                u.costNGN = (parseFloat(u.cost) || 0) * systemState.usdToNgnRate;
-                usdCostSubtotalNGN += u.costNGN;
-                usdValueSubtotalNGN += u.currentValueNGN;
-            });
-
-            const grandTotalValue = stocksValueSubtotal + fundsValueSubtotal + pensionValueSubtotal + usdValueSubtotalNGN;
-            const grandTotalCost = stocksCostSubtotal + fundsCostSubtotal + pensionCostSubtotal + usdCostSubtotalNGN;
-            const absoluteGainLoss = grandTotalValue - grandTotalCost;
-            const combinedRoi = grandTotalCost > 0 ? (absoluteGainLoss / grandTotalCost) * 100 : 0;
-
-            document.getElementById('kpi-total-value').innerText = `₦${grandTotalValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('kpi-total-cost').innerText = `₦${grandTotalCost.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('kpi-total-gain').innerText = `₦${absoluteGainLoss.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('kpi-total-roi').innerText = `${combinedRoi.toFixed(2)}%`;
-
-            renderStocksTable(valSub=stocksValueSubtotal, grandTotalValue);
-            renderFundsTable(valSub=fundsValueSubtotal, grandTotalValue);
-            renderPensionTable(valSub=pensionValueSubtotal, grandTotalValue);
-            renderUsdTable(valSub=usdValueSubtotalNGN, grandTotalValue);
-            processLoansEngine();
-            processBudgetEngine();
-            
-            renderTickerTape();
-            triggerChartRebuilds(stocksValueSubtotal, fundsValueSubtotal, pensionValueSubtotal, usdValueSubtotalNGN);
-            
-            persistState();
-        }
-
-        function renderStocksTableHead() {
-            const thead = document.getElementById('stocks-table-head');
-            if(!thead) return;
-            const brokerHeaderCells = systemState.brokers.map((b, i) => {
-                const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
-                return `<th class="px-4 py-3.5 text-right ${palette.head} ${palette.text}">${b} Cost</th><th class="px-4 py-3.5 text-right ${palette.head} ${palette.text}">${b} Units</th>`;
-            }).join('');
-            thead.innerHTML = `<tr><th class="px-4 py-3.5 rounded-tl-lg">Ticker</th><th class="px-4 py-3.5 text-right">Live Price</th>${brokerHeaderCells}<th class="px-4 py-3.5 text-right">Total Units</th><th class="px-4 py-3.5 text-right">Cost Basis</th><th class="px-4 py-3.5 text-right">Value</th><th class="px-4 py-3.5 text-right">Net Return</th><th class="px-4 py-3.5 text-right">% Shares</th><th class="px-4 py-3.5 text-right">% Port</th><th class="px-4 py-3.5 text-center rounded-tr-lg">Actions</th></tr>`;
-        }
-
-        function renderStocksTable(valSub, grandTotal) {
-            renderStocksTableHead();
-            const tbody = document.getElementById('stocks-table-body');
-            tbody.innerHTML = '';
-            
-            if (systemState.stocks.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(9 + (systemState.brokers.length*2), "equities positions");
-                return;
-            }
-
-            systemState.stocks.forEach((s, idx) => {
-                const portfolioWeight = grandTotal > 0 ? (s.currentValue / grandTotal) * 100 : 0;
-                const sharesWeight = valSub > 0 ? (s.currentValue / valSub) * 100 : 0;
-                const roiPercent = s.totalCost > 0 ? (s.netReturn / s.totalCost) * 100 : 0;
-                const brokerCells = systemState.brokers.map((b, i) => {
-                    const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
-                    const h = s.holdings[b] || { cost: 0, units: 0 };
-                    return `<td class="px-4 py-4 text-right ${palette.bg} ${palette.text} font-medium">₦${(h.cost||0).toLocaleString()}</td><td class="px-4 py-4 text-right ${palette.bg} ${palette.value} font-medium">${h.units || 0}</td>`;
-                }).join('');
-
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                tr.innerHTML = `<td class="px-4 py-4"><span class="font-bold text-white bg-slate-800/50 px-2 py-1 rounded">${s.ticker}</span></td><td class="px-4 py-4 text-right">₦${(s.livePrice||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>${brokerCells}<td class="px-4 py-4 text-right font-bold">${s.totalUnits}</td><td class="px-4 py-4 text-right text-slate-400">₦${s.totalCost.toLocaleString()}</td><td class="px-4 py-4 text-right font-bold text-white">₦${s.currentValue.toLocaleString()}</td><td class="px-4 py-4 text-right"><span class="${s.netReturn>=0?'text-emerald-400':'text-rose-400'} font-bold">₦${s.netReturn.toLocaleString()}</span><br><span class="text-[10px] text-slate-500">${roiPercent.toFixed(1)}%</span></td><td class="px-4 py-4 text-right text-emerald-500/70">${sharesWeight.toFixed(2)}%</td><td class="px-4 py-4 text-right text-emerald-400 font-medium">${portfolioWeight.toFixed(2)}%</td><td class="px-4 py-4 text-center space-y-1.5"><button onclick="syncStockPrice('${s.ticker}').then(()=>window.showToast('Synced ${s.ticker}')).then(recomputeAllLedgers)" class="block w-full bg-slate-800 hover:bg-slate-700 text-white text-[10px] px-2 py-1.5 rounded transition shadow-sm">Sync</button><button onclick="openStockModal('${s.ticker}')" class="block w-full bg-blue-900/30 text-blue-400 hover:bg-blue-900/50 text-[10px] px-2 py-1.5 rounded transition shadow-sm">Edit</button><button onclick="deleteAsset('stocks', ${idx})" class="block w-full text-rose-500/80 hover:text-rose-400 text-[10px] py-1 transition">Delete</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function renderFundsTable(valSub, grandTotal) {
-            const tbody = document.getElementById('funds-table-body'); tbody.innerHTML = '';
-            if(systemState.funds.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(7, "mutual funds"); return;
-            }
-            systemState.funds.forEach((f, idx) => {
-                const w = grandTotal > 0 ? (f.currentValue / grandTotal) * 100 : 0;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                tr.innerHTML = `<td class="px-6 py-4 font-medium text-slate-200">${f.name}</td><td class="px-6 py-4 text-right text-slate-400">₦${f.cost.toLocaleString()}</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">+₦${f.interest.toLocaleString()}</td><td class="px-6 py-4 text-right font-bold text-white">₦${f.currentValue.toLocaleString()}</td><td class="px-6 py-4 text-right text-slate-400">${(f.cost>0?(f.interest/f.cost*100):0).toFixed(2)}%</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">${w.toFixed(2)}%</td><td class="px-6 py-4 text-center space-x-3"><button onclick="openFundModal(${idx})" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold transition">Edit</button><button onclick="deleteAsset('funds', ${idx})" class="text-rose-500/80 hover:text-rose-400 text-[11px] font-semibold transition">Delete</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openFundModal(idx = -1) {
-            document.getElementById('fund-edit-index').value = idx;
-            if(idx >= 0 && systemState.funds[idx]) {
-                const f = systemState.funds[idx];
-                document.getElementById('fund-name').value = f.name || '';
-                document.getElementById('fund-cost').value = f.cost || 0;
-                document.getElementById('fund-interest').value = f.interest || 0;
-                document.getElementById('fund-modal-title').innerText = 'Edit Mutual Fund Account';
-            } else {
-                document.getElementById('fund-name').value = '';
-                document.getElementById('fund-cost').value = '';
-                document.getElementById('fund-interest').value = '';
-                document.getElementById('fund-modal-title').innerText = 'Add Mutual Fund Account';
-            }
-            openModal('fund-modal');
-        }
-
-        function saveFundAsset() {
-            const idx = parseInt(document.getElementById('fund-edit-index').value);
-            const name = document.getElementById('fund-name').value.trim();
-            const cost = parseFloat(document.getElementById('fund-cost').value) || 0;
-            const interest = parseFloat(document.getElementById('fund-interest').value) || 0;
-            if(name) {
-                if(idx >= 0 && idx < systemState.funds.length) {
-                    systemState.funds[idx] = { name, cost, interest };
-                    window.showToast("Fund updated successfully.");
-                } else {
-                    systemState.funds.push({ name, cost, interest });
-                    window.showToast("Fund added successfully.");
-                }
-                closeModal('fund-modal');
-                recomputeAllLedgers();
-            }
-        }
-
-        function renderPensionTable(valSub, grandTotal) {
-            const tbody = document.getElementById('pension-table-body'); tbody.innerHTML = '';
-            if(systemState.pensions.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(7, "pension accounts"); return;
-            }
-            systemState.pensions.forEach((p, idx) => {
-                const w = grandTotal > 0 ? (p.currentValue / grandTotal) * 100 : 0;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                tr.innerHTML = `<td class="px-6 py-4 font-medium text-slate-200">${p.name}</td><td class="px-6 py-4 text-right text-slate-400">₦${p.cost.toLocaleString()}</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">+₦${p.interest.toLocaleString()}</td><td class="px-6 py-4 text-right font-bold text-white">₦${p.currentValue.toLocaleString()}</td><td class="px-6 py-4 text-right text-slate-400">${(p.cost>0?(p.interest/p.cost*100):0).toFixed(2)}%</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">${w.toFixed(2)}%</td><td class="px-6 py-4 text-center space-x-3"><button onclick="openPensionModal(${idx})" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold transition">Edit</button><button onclick="deleteAsset('pensions', ${idx})" class="text-rose-500/80 hover:text-rose-400 text-[11px] font-semibold transition">Delete</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openPensionModal(idx = -1) {
-            document.getElementById('pension-edit-index').value = idx;
-            if(idx >= 0 && systemState.pensions[idx]) {
-                const p = systemState.pensions[idx];
-                document.getElementById('pension-name').value = p.name || '';
-                document.getElementById('pension-cost').value = p.cost || 0;
-                document.getElementById('pension-interest').value = p.interest || 0;
-                document.getElementById('pension-modal-title').innerText = 'Edit Pension Allocation';
-            } else {
-                document.getElementById('pension-name').value = '';
-                document.getElementById('pension-cost').value = '';
-                document.getElementById('pension-interest').value = '';
-                document.getElementById('pension-modal-title').innerText = 'Link Pension Allocation';
-            }
-            openModal('pension-modal');
-        }
-
-        function savePensionAsset() {
-            const idx = parseInt(document.getElementById('pension-edit-index').value);
-            const name = document.getElementById('pension-name').value.trim();
-            const cost = parseFloat(document.getElementById('pension-cost').value) || 0;
-            const interest = parseFloat(document.getElementById('pension-interest').value) || 0;
-            if(name) {
-                if(idx >= 0 && idx < systemState.pensions.length) {
-                    systemState.pensions[idx] = { name, cost, interest };
-                    window.showToast("Pension updated.");
-                } else {
-                    systemState.pensions.push({ name, cost, interest });
-                    window.showToast("Pension linked.");
-                }
-                closeModal('pension-modal');
-                recomputeAllLedgers();
-            }
-        }
-
-        function renderUsdTable(valSub, grandTotal) {
-            const tbody = document.getElementById('usd-table-body'); tbody.innerHTML = '';
-            if(systemState.usdAssets.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(7, "USD assets"); return;
-            }
-            systemState.usdAssets.forEach((u, idx) => {
-                const w = grandTotal > 0 ? (u.currentValueNGN / grandTotal) * 100 : 0;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                tr.innerHTML = `<td class="px-6 py-4 font-medium text-slate-200">${u.name}</td><td class="px-6 py-4 text-right text-slate-400">$${u.cost.toLocaleString()}</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">+$${u.interest.toLocaleString()}</td><td class="px-6 py-4 text-right text-slate-200 font-medium">$${u.valUSD.toLocaleString()}</td><td class="px-6 py-4 text-right font-bold text-emerald-400">₦${u.currentValueNGN.toLocaleString()}</td><td class="px-6 py-4 text-right text-emerald-400 font-medium">${w.toFixed(2)}%</td><td class="px-6 py-4 text-center space-x-3"><button onclick="openUsdModal(${idx})" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold transition">Edit</button><button onclick="deleteAsset('usdAssets', ${idx})" class="text-rose-500/80 hover:text-rose-400 text-[11px] font-semibold transition">Delete</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openUsdModal(idx = -1) {
-            document.getElementById('usd-edit-index').value = idx;
-            if(idx >= 0 && systemState.usdAssets[idx]) {
-                const u = systemState.usdAssets[idx];
-                document.getElementById('usd-name').value = u.name || '';
-                document.getElementById('usd-cost').value = u.cost || 0;
-                document.getElementById('usd-interest').value = u.interest || 0;
-                document.getElementById('usd-modal-title').innerText = 'Edit Foreign USD Position';
-            } else {
-                document.getElementById('usd-name').value = '';
-                document.getElementById('usd-cost').value = '';
-                document.getElementById('usd-interest').value = '';
-                document.getElementById('usd-modal-title').innerText = 'Add Foreign USD Position';
-            }
-            openModal('usd-modal');
-        }
-
-        function saveUsdAsset() {
-            const idx = parseInt(document.getElementById('usd-edit-index').value);
-            const name = document.getElementById('usd-name').value.trim();
-            const cost = parseFloat(document.getElementById('usd-cost').value) || 0;
-            const interest = parseFloat(document.getElementById('usd-interest').value) || 0;
-            if(name) {
-                if(idx >= 0 && idx < systemState.usdAssets.length) {
-                    systemState.usdAssets[idx] = { name, cost, interest };
-                    window.showToast("USD position updated.");
-                } else {
-                    systemState.usdAssets.push({ name, cost, interest });
-                    window.showToast("USD position added.");
-                }
-                closeModal('usd-modal');
-                recomputeAllLedgers();
-            }
-        }
-
-        function formatDateLocal(d) {
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function processLoansEngine() {
-            const tbody = document.getElementById('loans-table-body'); tbody.innerHTML = '';
-            if(systemState.loans.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(9, "debt facilities"); 
-                document.getElementById('kpi-loan-principal').innerText = `₦0.00`;
-                document.getElementById('kpi-loan-interest').innerText = `₦0.00`;
-                document.getElementById('kpi-loan-outstanding').innerText = `₦0.00`;
-                return;
-            }
-
-            let pAgg = 0, iAgg = 0, oAgg = 0;
-            systemState.loans.forEach((loan, idx) => {
-                let rPrincipal = parseFloat(loan.amount) || 0, accInt = 0, totalRepaid = 0;
-                
-                const parts = loan.date.split('-');
-                let scanDate = new Date(parts[0], parts[1] - 1, parts[2]);
-                let curDate = new Date();
-                curDate.setHours(0,0,0,0);
-
-                while (scanDate <= curDate) {
-                    accInt += rPrincipal * ((parseFloat(loan.rate) / 100) / 365);
-                    const dateStr = formatDateLocal(scanDate);
-                    (loan.repayments || []).filter(r => r.date === dateStr).forEach(p => {
-                        rPrincipal -= parseFloat(p.amount); 
-                        totalRepaid += parseFloat(p.amount);
-                    });
-                    scanDate.setDate(scanDate.getDate() + 1);
-                }
-                if(rPrincipal < 0) rPrincipal = 0;
-
-                let currentBalance = rPrincipal + accInt;
-                pAgg += loan.amount; iAgg += accInt; oAgg += currentBalance;
-
-                const historyHtml = (loan.repayments && loan.repayments.length > 0)
-                    ? loan.repayments.map((r, rIdx) => `
-                        <span class="inline-flex items-center gap-1.5 bg-emerald-950/40 border border-emerald-800/40 text-emerald-300 text-[10px] px-2 py-1 rounded-md my-0.5 font-mono shadow-sm">
-                            <span>Batch #${rIdx+1}: ₦${parseFloat(r.amount).toLocaleString()} (${r.date})</span>
-                            <button onclick="deleteLoanRepayment(${idx}, ${rIdx})" class="text-rose-400 hover:text-rose-300 font-bold ml-1 text-xs" title="Remove Batch">&times;</button>
-                        </span>
-                    `).join(' ')
-                    : '<span class="text-slate-500 italic text-[10px]">No batch payments logged</span>';
-
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                tr.innerHTML = `
-                    <td class="px-4 py-4 font-bold text-white"><span class="bg-slate-800/50 px-2 py-1 rounded">${loan.provider}</span></td>
-                    <td class="px-4 py-4 text-right text-slate-400 font-medium">₦${loan.amount.toLocaleString()}</td>
-                    <td class="px-4 py-4 text-center text-slate-400">${loan.date}</td>
-                    <td class="px-4 py-4 text-right font-medium">${loan.rate}%</td>
-                    <td class="px-4 py-4 text-right text-rose-400 font-medium">₦${accInt.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                    <td class="px-4 py-4 text-right text-emerald-400 font-medium">₦${totalRepaid.toLocaleString()}</td>
-                    <td class="px-4 py-4 text-right font-bold text-rose-500">₦${currentBalance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-                    <td class="px-4 py-4"><div class="flex flex-wrap gap-1 max-w-xs">${historyHtml}</div></td>
-                    <td class="px-4 py-4 text-center space-y-1.5">
-                        <button onclick="launchRepaymentModal('${loan.id}')" class="block w-full bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 px-2 py-1.5 rounded transition text-[10px] font-semibold border border-emerald-500/20 shadow-sm">+ Pay Tranche</button>
-                        <button onclick="deleteAsset('loans', ${idx})" class="block w-full text-rose-500/80 hover:text-rose-400 text-[10px] py-1 transition">Delete Loan</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('kpi-loan-principal').innerText = `₦${pAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('kpi-loan-interest').innerText = `₦${iAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-            document.getElementById('kpi-loan-outstanding').innerText = `₦${oAgg.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-        }
-
-        function launchRepaymentModal(loanId) {
-            document.getElementById('repayment-loan-id').value = loanId;
-            document.getElementById('repayment-date').value = new Date().toISOString().split('T')[0];
-            openModal('repayment-modal');
-        }
-
-        function saveLoanRepayment() {
-            const id = document.getElementById('repayment-loan-id').value;
-            const amount = parseFloat(document.getElementById('repayment-amount').value);
-            const date = document.getElementById('repayment-date').value;
-            if(id && !isNaN(amount) && amount > 0 && date) { 
-                const targetLoan = systemState.loans.find(l => l.id === id);
-                if(targetLoan) {
-                    if(!targetLoan.repayments) targetLoan.repayments = [];
-                    targetLoan.repayments.push({ amount, date }); 
-                }
-                closeModal('repayment-modal'); 
-                window.showToast("Repayment tranche logged.");
-                recomputeAllLedgers(); 
-            }
-        }
-
-        function deleteLoanRepayment(loanIndex, repaymentIndex) {
-            if(confirm("Delete this batch repayment tranche record?")) {
-                systemState.loans[loanIndex].repayments.splice(repaymentIndex, 1);
-                window.showToast("Repayment removed.", "error");
-                recomputeAllLedgers();
-            }
-        }
-
-        // ==========================================
-        // DYNAMIC BUDGET ENGINE & HISTORY ROUTING
-        // ==========================================
-
-        window.switchBudgetPeriod = function(id) {
-            currentBudgetViewId = id;
-            processBudgetEngine();
-        };
-
-        window.openArchiveModal = function() {
-            if (!systemState.budgets || systemState.budgets.length === 0) {
-                window.showToast("No active budget categories to archive.", "error");
-                return;
-            }
-            // Set input default to current month
-            const now = new Date();
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            document.getElementById('archive-month-picker').value = `${now.getFullYear()}-${mm}`;
-            openModal('archive-budget-modal');
-        };
-
-        window.confirmArchiveMonth = function() {
-            const val = document.getElementById('archive-month-picker').value;
-            if(!val) return;
-            
-            const [year, month] = val.split('-');
-            const dateObj = new Date(year, parseInt(month) - 1);
-            const monthName = dateObj.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-
-            // Ensure no duplicate name overlaps
-            if(systemState.budgetHistory.find(a => a.label === monthName)) {
-                if(!confirm(`An archive for ${monthName} already exists. Overwrite?`)) return;
-                systemState.budgetHistory = systemState.budgetHistory.filter(a => a.label !== monthName);
-            }
-
-            const snapshot = {
-                id: 'ARCHIVE-' + Date.now(),
-                label: monthName,
-                dateSaved: new Date().toISOString(),
-                budgets: JSON.parse(JSON.stringify(systemState.budgets)),
-                incomes: JSON.parse(JSON.stringify(systemState.incomes))
-            };
-
-            systemState.budgetHistory.push(snapshot);
-            systemState.budgets.forEach(b => b.actual = 0); // Reset live tracking
-
-            closeModal('archive-budget-modal');
-            recomputeAllLedgers();
-            window.showToast(`Archived as "${monthName}". Spending reset to ₦0.`);
-        };
-
-        window.deleteCurrentArchive = function() {
-            if(currentBudgetViewId === 'live') return;
-            if(confirm("Permanently delete this archived snapshot?")) {
-                systemState.budgetHistory = systemState.budgetHistory.filter(a => a.id !== currentBudgetViewId);
-                currentBudgetViewId = 'live'; // Return to live view
-                recomputeAllLedgers(); 
-                window.showToast("Snapshot deleted.", "error");
-            }
-        };
-
-        function processBudgetEngine() {
-            const isLive = currentBudgetViewId === 'live';
-            let viewBudgets = systemState.budgets;
-            let viewIncomes = systemState.incomes;
-
-            // Route data source based on Dropdown
-            if (!isLive) {
-                const archive = systemState.budgetHistory.find(a => a.id === currentBudgetViewId);
-                if (archive) {
-                    viewBudgets = archive.budgets;
-                    viewIncomes = archive.incomes;
-                } else {
-                    currentBudgetViewId = 'live'; // Fallback
-                }
-            }
-
-            // 1. Update Dropdown UI safely
-            const selector = document.getElementById('budget-period-selector');
-            const historyOptions = (systemState.budgetHistory || [])
-                .sort((a,b) => new Date(b.dateSaved) - new Date(a.dateSaved))
-                .map(a => `<option value="${a.id}">${a.label}</option>`).join('');
-            selector.innerHTML = `<option value="live">Current Period (Live)</option>` + historyOptions;
-            selector.value = currentBudgetViewId;
-
-            // 2. Toggle UI Read-Only Controls
-            document.getElementById('btn-archive-budget').classList.toggle('hidden', !isLive);
-            document.getElementById('btn-delete-archive').classList.toggle('hidden', isLive);
-            
-            document.getElementById('income-form-wrapper').classList.toggle('hidden', !isLive);
-            document.getElementById('envelope-form-wrapper').classList.toggle('hidden', !isLive);
-            document.getElementById('readonly-budget-notice').classList.toggle('hidden', isLive);
-
-            // 3. Render Income List (Passing isLive flag to hide delete buttons)
-            renderIncomeList(viewIncomes, isLive);
-            
-            // 4. Calculate KPIs
-            const totalIncome = (viewIncomes || []).reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
-
-            const tbody = document.getElementById('budget-table-body'); 
-            tbody.innerHTML = '';
-            
-            if(!viewBudgets || viewBudgets.length === 0) {
-                tbody.innerHTML = getEmptyRowHtml(6, isLive ? "budget envelopes" : "archived envelopes");
-                document.getElementById('kpi-budget-income').innerText = `₦${totalIncome.toLocaleString()}`;
-                document.getElementById('kpi-budget-allocated').innerText = `₦0.00`;
-                document.getElementById('kpi-budget-actual').innerText = `₦0.00`;
-                document.getElementById('kpi-budget-variance').innerText = `₦${totalIncome.toLocaleString()}`;
-                return;
-            }
-
-            let capAgg = 0, actAgg = 0;
-            viewBudgets.forEach((b, idx) => {
-                let v = b.cap - b.actual; capAgg += b.cap; actAgg += b.actual;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-900/40 border-b border-slate-800/40 text-slate-300";
-                
-                // Action Buttons or Read-Only Badge
-                const actionsHtml = isLive 
-                    ? `<button onclick="launchExpenseModal(${idx})" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 px-3 py-1.5 rounded transition text-[11px] font-semibold shadow-sm border border-blue-500/20">Log Spend</button>
-                       <button onclick="openBudgetModal(${idx})" class="text-blue-400 hover:text-blue-300 text-xs font-medium transition ml-1 mr-1">Edit</button>
-                       <button onclick="deleteBudgetCategory(${idx})" class="text-rose-500/80 hover:text-rose-400 text-xs font-medium transition">Delete</button>`
-                    : `<span class="text-slate-500 text-[10px] uppercase tracking-wider font-semibold bg-slate-800/50 px-2.5 py-1.5 rounded shadow-inner">Archived</span>`;
-
-                tr.innerHTML = `
-                    <td class="px-6 py-4"><span class="font-bold text-white bg-slate-800/50 px-2 py-1 rounded shadow-inner">${b.name}</span></td>
-                    <td class="px-6 py-4 text-right font-medium text-slate-400">₦${b.cap.toLocaleString()}</td>
-                    <td class="px-6 py-4 text-right font-bold text-blue-400">₦${b.actual.toLocaleString()}</td>
-                    <td class="px-6 py-4 text-right font-bold ${v>=0?'text-emerald-400':'text-rose-400'}">₦${v.toLocaleString()}</td>
-                    <td class="px-6 py-4 text-center">${v>=0?'<span class="px-2.5 py-1 bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 rounded-full text-[10px] font-bold tracking-wider">SAFE</span>':'<span class="px-2.5 py-1 bg-rose-950/60 border border-rose-800/60 text-rose-400 rounded-full text-[10px] font-bold tracking-wider animate-pulse">ALERT</span>'}</td>
-                    <td class="px-6 py-4 text-center whitespace-nowrap">${actionsHtml}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-            
-            document.getElementById('kpi-budget-income').innerText = `₦${totalIncome.toLocaleString()}`;
-            document.getElementById('kpi-budget-allocated').innerText = `₦${capAgg.toLocaleString()}`;
-            document.getElementById('kpi-budget-actual').innerText = `₦${actAgg.toLocaleString()}`;
-            document.getElementById('kpi-budget-variance').innerText = `₦${(totalIncome - actAgg).toLocaleString()}`;
-        }
-
-        function renderIncomeList(incomesList, isLive) {
-            const container = document.getElementById('income-list');
-            if(!container) return;
-            if(!incomesList || incomesList.length === 0) {
-                container.innerHTML = `<div class="bg-slate-900/20 border border-slate-800/50 rounded-lg py-6 flex flex-col items-center justify-center"><svg class="w-6 h-6 text-slate-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg><p class="text-xs text-slate-500 italic text-center">No income sources set.</p></div>`;
-                return;
-            }
-            container.innerHTML = incomesList.map(inc => `
-                <div class="flex items-center justify-between bg-[#0B0F13] border border-slate-800 rounded-lg px-3 py-2.5 text-xs shadow-sm group hover:border-slate-700 transition">
-                    <span class="text-slate-200 font-medium">${inc.name}</span>
-                    <span class="flex items-center gap-3">
-                        <span class="text-emerald-400 font-bold">₦${(parseFloat(inc.amount)||0).toLocaleString()}</span>
-                        ${isLive ? `<button onclick="removeIncomeSource('${inc.id}')" class="text-slate-600 group-hover:text-rose-400 font-bold transition w-5 h-5 flex items-center justify-center rounded hover:bg-rose-500/10">&times;</button>` : ''}
-                    </span>
-                </div>
-            `).join('');
-        }
-
-        function addIncomeSource() {
-            const nameField = document.getElementById('new-income-name');
-            const amountField = document.getElementById('new-income-amount');
-            const name = nameField.value.trim();
-            const amount = parseFloat(amountField.value);
-            if(name && !isNaN(amount) && amount >= 0) {
-                systemState.incomes.push({ id: 'INC-' + Math.floor(Math.random()*90000), name, amount });
-                nameField.value = ''; amountField.value = '';
-                recomputeAllLedgers();
-                window.showToast("Income source added.");
-            }
-        }
-
-        function removeIncomeSource(id) {
-            systemState.incomes = systemState.incomes.filter(i => i.id !== id);
-            recomputeAllLedgers();
-            window.showToast("Income removed.", "error");
-        }
-
-        function launchExpenseModal(idx) {
-            document.getElementById('expense-category-index').value = idx;
-            document.getElementById('expense-amount').value = '';
-            openModal('expense-modal');
-        }
-
-        function openBudgetModal(idx = -1) {
-            document.getElementById('budget-edit-index').value = idx;
-            if(idx >= 0 && systemState.budgets[idx]) {
-                const b = systemState.budgets[idx];
-                document.getElementById('edit-budget-name').value = b.name || '';
-                document.getElementById('edit-budget-cap').value = b.cap || 0;
-                document.getElementById('edit-budget-actual').value = b.actual || 0;
-            }
-            openModal('budget-category-modal');
-        }
-
-        function saveBudgetCategoryModal() {
-            const idx = parseInt(document.getElementById('budget-edit-index').value);
-            const name = document.getElementById('edit-budget-name').value.trim();
-            const cap = parseFloat(document.getElementById('edit-budget-cap').value) || 0;
-            const actual = parseFloat(document.getElementById('edit-budget-actual').value) || 0;
-            if(name && idx >= 0 && idx < systemState.budgets.length) {
-                systemState.budgets[idx] = { name, cap, actual };
-                closeModal('budget-category-modal');
-                recomputeAllLedgers();
-                window.showToast("Envelope updated.");
-            }
-        }
-
-        function deleteBudgetCategory(idx) {
-            if(confirm("Delete this budget category envelope?")) {
-                systemState.budgets.splice(idx, 1);
-                recomputeAllLedgers();
-                window.showToast("Envelope removed.", "error");
-            }
-        }
-
-        function addBudgetCategory() {
-            const name = document.getElementById('new-budget-name').value.trim();
-            const cap = parseFloat(document.getElementById('new-budget-cap').value);
-            if(name && !isNaN(cap)) { 
-                systemState.budgets.push({ name, cap, actual: 0 }); 
-                document.getElementById('new-budget-name').value = '';
-                document.getElementById('new-budget-cap').value = '';
-                recomputeAllLedgers(); 
-                window.showToast("Envelope provisioned.");
-            }
-        }
-
-        function saveBudgetExpense() {
-            const idx = document.getElementById('expense-category-index').value;
-            const amt = parseFloat(document.getElementById('expense-amount').value);
-            if(!isNaN(amt) && systemState.budgets[idx]) { 
-                systemState.budgets[idx].actual += amt; 
-                closeModal('expense-modal'); 
-                recomputeAllLedgers(); 
-                window.showToast("Expenditure logged.");
-            }
-        }
-
-        function openStockModal(ticker = null) {
-            const existing = ticker ? systemState.stocks.find(s => s.ticker === ticker) : null;
-            document.getElementById('stock-ticker').value = existing ? existing.ticker : '';
-            document.getElementById('stock-ticker').disabled = !!existing;
-            document.getElementById('stock-manual-price').value = (existing && existing.priceSource === 'manual') ? existing.livePrice : '';
-            buildStockBrokerFields(existing);
-            openModal('stock-modal');
-        }
-
-        function buildStockBrokerFields(existing) {
-            const container = document.getElementById('stock-broker-fields');
-            container.innerHTML = systemState.brokers.map((b, i) => {
-                const palette = BROKER_COLOR_PALETTE[i % BROKER_COLOR_PALETTE.length];
-                const h = existing?.holdings?.[b] || { cost: 0, units: 0 };
-                return `<div class="grid grid-cols-2 gap-4"><div><label class="block text-[11px] uppercase tracking-wider ${palette.text} mb-1">${b} Cost (₦)</label><input type="number" data-broker="${b}" data-field="cost" class="stock-broker-input w-full bg-[#0B0F13] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-emerald-500 transition" value="${h.cost || ''}"></div><div><label class="block text-[11px] uppercase tracking-wider ${palette.text} mb-1">${b} Units</label><input type="number" data-broker="${b}" data-field="units" class="stock-broker-input w-full bg-[#0B0F13] border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-emerald-500 transition" value="${h.units || ''}"></div></div>`;
-            }).join('');
-        }
-
-        function saveStockAsset() {
-            const ticker = document.getElementById('stock-ticker').value.toUpperCase().trim();
-            if(!ticker) return;
-            const holdings = {};
-            systemState.brokers.forEach(b => holdings[b] = { cost: 0, units: 0 });
-            document.querySelectorAll('.stock-broker-input').forEach(input => {
-                holdings[input.dataset.broker][input.dataset.field] = parseFloat(input.value) || 0;
-            });
-            const manualPriceRaw = document.getElementById('stock-manual-price').value;
-            const hasManualPrice = manualPriceRaw !== '' && !isNaN(parseFloat(manualPriceRaw));
-
-            let existing = systemState.stocks.find(s => s.ticker === ticker);
-            if(existing) {
-                existing.holdings = holdings;
-                if(hasManualPrice) { existing.livePrice = parseFloat(manualPriceRaw); existing.priceSource = 'manual'; }
-                window.showToast("Stock position updated.");
-            } else {
-                systemState.stocks.push({
-                    ticker, holdings,
-                    livePrice: hasManualPrice ? parseFloat(manualPriceRaw) : 0,
-                    priceSource: hasManualPrice ? 'manual' : 'pending',
-                    lastSynced: null
-                });
-                window.showToast("Stock position added.");
-            }
-            closeModal('stock-modal');
-            recomputeAllLedgers();
-
-            if(!hasManualPrice) {
-                syncStockPrice(ticker).then(() => recomputeAllLedgers());
-            }
-        }
-
-        function openBrokerModal() { renderBrokerList(); openModal('broker-modal'); }
-        function renderBrokerList() {
-            document.getElementById('broker-list').innerHTML = systemState.brokers.map(b => `
-                <span class="bg-[#0B0F13] border border-slate-700 rounded-lg pl-3 pr-2 py-1.5 text-xs font-medium flex items-center gap-2 text-slate-200 shadow-sm">${b}<button onclick="removeBroker('${b}')" class="text-slate-500 hover:text-rose-400 font-bold transition text-sm">&times;</button></span>
-            `).join('');
-        }
-
-        function addBroker() {
-            const name = document.getElementById('new-broker-name').value.trim();
-            if(name && !systemState.brokers.includes(name)) {
-                systemState.brokers.push(name);
-                systemState.stocks.forEach(s => s.holdings[name] = { cost: 0, units: 0 });
-                document.getElementById('new-broker-name').value = '';
-                renderBrokerList(); recomputeAllLedgers();
-                window.showToast(`Broker '${name}' linked.`);
-            }
-        }
-
-        function removeBroker(name) {
-            if(systemState.brokers.length > 1 && confirm(`Remove ${name} from all stock sheets?`)) {
-                systemState.brokers = systemState.brokers.filter(b => b !== name);
-                systemState.stocks.forEach(s => delete s.holdings[name]);
-                renderBrokerList(); recomputeAllLedgers();
-                window.showToast("Broker removed.", "error");
-            } else if (systemState.brokers.length <= 1) {
-                window.showToast("You must maintain at least one broker.", "error");
-            }
-        }
-
-        function saveNewLoan() {
-            const provider = document.getElementById('loan-provider').value;
-            const amount = parseFloat(document.getElementById('loan-amount').value) || 0;
-            const date = document.getElementById('loan-date').value;
-            const rate = parseFloat(document.getElementById('loan-rate').value) || 0;
-            if(provider && amount && date) { 
-                systemState.loans.push({ id: 'L-'+Math.floor(Math.random()*9000), provider, amount, date, rate, repayments: [] }); 
-                closeModal('loan-modal'); 
-                window.showToast("Liability facility provisioned.");
-                recomputeAllLedgers(); 
-            }
-        }
-
-        function deleteAsset(type, idx) {
-            if(confirm("Are you sure you want to permanently delete this entry?")) { 
-                systemState[type].splice(idx, 1); 
-                window.showToast("Entry permanently deleted.", "error");
-                recomputeAllLedgers(); 
-            }
-        }
-
-        function triggerChartRebuilds(stocksVal=0, fundsVal=0, pensionVal=0, usdVal=0) {
-            const allocCtx = document.getElementById('assetAllocationChart');
-            if (allocCtx) {
-                if(allocationChartInstance) allocationChartInstance.destroy();
-                allocationChartInstance = new Chart(allocCtx, {
-                    type: 'doughnut', data: {
-                        labels: ['Stocks', 'Mutual Funds', 'Pension', 'USD Foreign Assets'],
-                        datasets: [{ data: [stocksVal, fundsVal, pensionVal, usdVal], backgroundColor: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B'], borderWidth: 0, hoverOffset: 4 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8', font: { size: 10, family: "'Plus Jakarta Sans', sans-serif" }, padding: 15 } } }, cutout: '70%' }
-                });
-            }
-
-            const perfCtx = document.getElementById('assetPerformanceChart');
-            if (perfCtx) {
-                if(performanceChartInstance) performanceChartInstance.destroy();
-                let labels = systemState.stocks.map(s => s.ticker);
-                let dataValues = systemState.stocks.map(s => s.netReturn);
-                performanceChartInstance = new Chart(perfCtx, {
-                    type: 'bar', data: {
-                        labels: labels, datasets: [{ label: 'Yield (₦)', data: dataValues, backgroundColor: dataValues.map(v => v >= 0 ? '#10B981' : '#F43F5E'), borderRadius: 4 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { border: { display: false }, grid: { color: '#1E293B' }, ticks: { color: '#64748B', font: { size: 10 } } }, x: { grid: { display: false }, ticks: { color: '#94A3B8', font: { size: 10 } } } } }
-                });
-            }
-        }
-    </script>
+    <!-- Scripts modularized -->
+    <script src="js/app.js"></script>
+    <script src="js/portfolio.js"></script>
+    <script src="js/loans.js"></script>
+    <script src="js/budget.js"></script>
 </body>
 </html>
